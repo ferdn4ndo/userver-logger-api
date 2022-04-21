@@ -1,9 +1,20 @@
 name: Label Issues And Pull Requests
 
 on:
-  issues: [opened, edited, closed, reopened]
+  issues:
+    types:
+      - opened
+      - edited
+      - closed
+      - reopened
   pull_request:
-    types: [opened, edited, closed, reopened, ready_for_review, synchronize]
+    types: 
+      - opened
+      - edited
+      - closed
+      - reopened
+      - ready_for_review
+      - synchronize
 
 jobs:
   label-issues-and-pull-requests:

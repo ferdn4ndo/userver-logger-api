@@ -2,11 +2,16 @@ name: Run The Test Suite
 
 on:
   push:
-    branches: [master, main]
-    paths-ignore: ['**.md']
-    tags-ignore: ['**']
+    branches: 
+      - master
+      - main
+    paths-ignore: 
+      - '**.md'
+    tags-ignore: 
+      - '**'
   pull_request:
-    paths-ignore: ['**.md']
+    paths-ignore:
+      - '**.md'
 
 jobs: # Docs: <https://git.io/JvxXE>
   check-gitleaks:
@@ -65,7 +70,8 @@ jobs: # Docs: <https://git.io/JvxXE>
   scan-image:
     name: Scan docker image
     runs-on: ubuntu-20.04
-    needs: [build-image]
+    needs: 
+      - build-image
     steps:
       - name: Download built docker image
         uses: actions/download-artifact@v2

@@ -2,7 +2,8 @@ name: Create Release Asset
 
 on:
   release:
-    types: [published]
+    types: 
+      - published
 
 jobs:
   create-release-asset:
