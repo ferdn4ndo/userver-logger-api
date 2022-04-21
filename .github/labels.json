@@ -1,63 +1,140 @@
 {
   "labels": {
-    "critical": {
-      "name": "type:critical",
-      "colour": "#E84137",
-      "description": "critical questions"
+    "bug": {
+      "name": "bug",
+      "colour": "#D73A4A",
+      "description": "Something isn't working"
+    },
+    "dependencies": {
+      "name": "dependencies",
+      "colour": "#0366D6",
+      "description": "Pull requests that update a dependency file"
+    },
+    "duplicate": {
+      "name": "duplicate",
+      "colour": "#CFD3D7",
+      "description": "This issue or pull request already exists"
+    },
+    "enhancement": {
+      "name": "enhancement",
+      "colour": "#A2EEEF",
+      "description": "A generic enhancement (not a feature)"
+    },
+    "github_actions": {
+      "name": "github_actions",
+      "colour": "#000000",
+      "description": "Pull requests that update GitHub Actions code"
+    },
+    "good_first_issue": {
+      "name": "good first issue",
+      "colour": "#7057FF",
+      "description": "Good for newcomers"
+    },
+    "help_wanted": {
+      "name": "help wanted",
+      "colour": "#008672",
+      "description": "Extra attention is needed"
+    },
+    "invalid": {
+      "name": "invalid",
+      "colour": "#E4E669",
+      "description": "This doesn't seem right"
     },
     "question": {
-      "name": "type:question",
-      "colour": "#EDEDED",
-      "description": "general questions"
+      "name": "question",
+      "colour": "#D876E3",
+      "description": "Further information is requested"
+    },
+    "wontfix": {
+      "name": "wontfix",
+      "colour": "#FFFFFF",
+      "description": "This will not be worked on"
+    },
+    "critical": {
+      "name": "critical",
+      "colour": "#E84137",
+      "description": "This is a critical question/issue to deal with"
     },
     "feature": {
-      "name": "type:feature_request",
-      "colour": "#43952A",
-      "description": "feature request"
+      "name": "feature request",
+      "colour": "#1C5DA3",
+      "description": "This is a feature request to develop or modify something"
     },
     "invalid_question": {
-      "name": "type:invalid question",
+      "name": "invalid question",
       "colour": "#CF2E1F",
-      "description": "invalid question (not related to GORM or described in document or not enough information provided)"
+      "description": "This is an invalid question (not related, already described or not enough info)"
     },
-    "with_playground": {
-      "name": "type:with reproduction steps",
-      "colour": "#00ff00",
-      "description": "with reproduction steps"
+    "reproducible": {
+      "name": "reproducible",
+      "colour": "#1CA378",
+      "description": "It was possible to reproduce the described scenario"
     },
-    "without_playground": {
-      "name": "type:missing reproduction steps",
-      "colour": "#CF2E1F",
-      "description": "missing reproduction steps"
-    },
-    "has_pr": {
-      "name": "type:has pull request",
-      "colour": "#43952A",
-      "description": "has pull request"
-    },
-    "not_tested": {
-      "name": "type:not tested",
-      "colour": "#CF2E1F",
-      "description": "not tested"
-    },
-    "tested": {
-      "name": "type:tested",
-      "colour": "#00ff00",
-      "description": "tested"
+    "not_reproducible": {
+      "name": "not reproducible",
+      "colour": "#A31C27",
+      "description": "It was NOT possible to reproduce the described scenario"
     },
     "breaking_change": {
-      "name": "type:breaking change",
-      "colour": "#CF2E1F",
-      "description": "breaking change"
+      "name": "breaking change",
+      "colour": "#FF2982",
+      "description": "The pull request/issue represents a breaking change compared to prior releases"
+    },
+    "has_pr": {
+      "name": "has pull request",
+      "colour": "#8596AB",
+      "description": "The issue has a pull request associated to it"
+    },
+    "waiting_for_review": {
+      "name": "waiting for review",
+      "colour": "#D6BD7E",
+      "description": "The pull request is waiting for code review"
+    },
+    "waiting_for_validation": {
+      "name": "waiting for validation",
+      "colour": "#F2C657",
+      "description": "The pull request is waiting for validation"
+    },
+    "requested_changes": {
+      "name": "requested changes",
+      "colour": "#F5782A",
+      "description": "The pull request was reviewed and/or validated and changes were requested"
+    },
+    "review_ok": {
+      "name": "review ok",
+      "colour": "#91F246",
+      "description": "The pull request review is OK (no requested changes)"
+    },
+    "validation_ok": {
+      "name": "validation ok",
+      "colour": "#47F53D",
+      "description": "Validation was succesfull in this pull request (no bugs found)"
     }
   },
   "issue": {
-    "with_playground": {
+    "bug": {
       "requires": 1,
       "conditions": [
         {
           "type": "descriptionMatches",
-          "pattern": "/github.com\/go-gorm\/playground\/pull\/\\d\\d+/s"
+          "pattern": "/^(bug|fix)/i"
+        },
+        {
+          "type": "titleMatches",
+          "pattern": "/^(bug|fix)/i"
+        }
+      ]
+    },
+    "enhancement": {
+      "requires": 1,
+      "conditions": [
+        {
+          "type": "descriptionMatches",
+          "pattern": "/(improvement|enhancement)/i"
+        },
+        {
+          "type": "titleMatches",
+          "pattern": "/(improvement|enhancement)/i"
         }
       ]
     },
@@ -93,44 +170,41 @@
         {
           "type": "titleMatches",
           "pattern": "/feature/i"
-        },
-        {
-          "type": "descriptionMatches",
-          "pattern": "/Describe the feature/i"
-        }
-      ]
-    },
-    "without_playground": {
-      "requires": 6,
-      "conditions": [
-        {
-          "type": "descriptionMatches",
-          "pattern": "/^((?!github.com\/go-gorm\/playground\/pull\/\\d\\d+).)*$/s"
-        },
-        {
-          "type": "titleMatches",
-          "pattern": "/^((?!question).)*$/s"
-        },
-        {
-          "type": "descriptionMatches",
-          "pattern": "/^((?!question).)*$/is"
-        },
-        {
-          "type": "descriptionMatches",
-          "pattern": "/^((?!Describe the feature).)*$/is"
-        },
-        {
-          "type": "titleMatches",
-          "pattern": "/^((?!critical|urgent).)*$/s"
-        },
-        {
-          "type": "descriptionMatches",
-          "pattern": "/^((?!critical|urgent).)*$/s"
         }
       ]
     }
   },
   "pr": {
+    "bug": {
+      "requires": 1,
+      "conditions": [
+        {
+          "type": "descriptionMatches",
+          "pattern": "/^(bug|fix)/i"
+        },
+        {
+          "type": "titleMatches",
+          "pattern": "/^(bug|fix)/i"
+        },
+        {
+          "type": "branchMatches",
+          "pattern": "^fix"
+        }
+      ]
+    },
+    "enhancement": {
+      "requires": 1,
+      "conditions": [
+        {
+          "type": "descriptionMatches",
+          "pattern": "/(improvement|enhancement)/i"
+        },
+        {
+          "type": "titleMatches",
+          "pattern": "/(improvement|enhancement)/i"
+        }
+      ]
+    },
     "critical": {
       "requires": 1,
       "conditions": [
@@ -144,21 +218,25 @@
         }
       ]
     },
-    "not_tested": {
+    "feature": {
       "requires": 1,
       "conditions": [
         {
-          "type": "descriptionMatches",
-          "pattern": "/\\[\\] Tested/"
+          "type": "titleMatches",
+          "pattern": "/feature/i"
+        },
+        {
+          "type": "branchMatches",
+          "pattern": "^feature"
         }
       ]
     },
-    "breaking_change": {
+    "github_actions": {
       "requires": 1,
       "conditions": [
         {
-          "type": "descriptionMatches",
-          "pattern": "/\\[\\] Non breaking API changes/"
+          "type": "filesMatch",
+          "glob": ".github/workflows/*.yml"
         }
       ]
     }

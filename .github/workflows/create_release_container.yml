@@ -2,7 +2,8 @@ name: Create Release Container
 
 on:
   release: # Docs: <https://git.io/JeBz1#release-event-release>
-    types: [published]
+    types: 
+      - published
 
 jobs:
   docker-image:
