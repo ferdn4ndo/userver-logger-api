@@ -1,0 +1,8 @@
+.editorconfig
+.git
+.github
+.idea
+.vscode
+./data
+./tmp
+LICENSE

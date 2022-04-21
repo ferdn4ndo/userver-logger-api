@@ -1,0 +1,22 @@
+## Build files
+build/*
+!build/.gitkeep
+
+## Data files
+data/*
+!data/.gitkeep
+
+## Temp files
+src/tmp/*
+!src/tmp/.gitkeep
+
+## Log files
+log_files/*
+!log_files/.gitkeep
+
+## IDEs
+/.vscode
+/.idea
+
+## Environment
+.env

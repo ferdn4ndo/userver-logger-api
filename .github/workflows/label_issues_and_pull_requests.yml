@@ -1,0 +1,19 @@
+name: Label Issues And Pull Requests
+
+on:
+  issues: [opened, edited, closed, reopened]
+  pull_request:
+    types: [opened, edited, closed, reopened, ready_for_review, synchronize]
+
+jobs:
+  label-issues-and-pull-requests:
+    name: Label Issues And Pull Requests
+    runs-on: ubuntu-latest
+    steps:
+      - name: Set up Checkout
+        uses: actions/checkout@v2
+
+      - name: Run IvanFon/super-labeler-action
+        uses: IvanFon/super-labeler-action@v1
+        with:
+          github-token: '${{ secrets.GITHUB_TOKEN }}'

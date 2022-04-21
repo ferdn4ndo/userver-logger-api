@@ -1,0 +1,14 @@
+version: '3'
+services:
+  api:
+    container_name: userver-logger-api
+    build:
+      context: .
+      dockerfile: dev.Dockerfile
+    ports:
+      - "5000:5000"
+    volumes:
+      - ./log_files:/log_files
+      - ./:/go/src/github.com/ferdn4ndo/userver-logger-api/
+    env_file:
+      - .env
