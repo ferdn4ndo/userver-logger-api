@@ -68,7 +68,7 @@ jobs: # Docs: <https://git.io/JvxXE>
     needs: [build-image]
     steps:
       - name: Download built docker image
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v3
         with:
           name: test-docker-image
           path: .artifact
@@ -96,7 +96,7 @@ jobs: # Docs: <https://git.io/JvxXE>
       LOG_FILES_DIR: /home/runner/work/userver-logger-api/userver-logger-api/data
     steps:
       - name: Download built docker image
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v3
         with:
           name: test-docker-image
           path: .artifact
