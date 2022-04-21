@@ -1,7 +1,7 @@
 # uServer-Logger-API
 
 [![Go Report Card](https://goreportcard.com/badge/github.com/ferdn4ndo/userver-logger-api)](https://goreportcard.com/report/github.com/ferdn4ndo/userver-logger-api)
-[![test status](https://github.com/ferdn4ndo/userver-logger-api/workflows/tests/badge.svg?branch=main "test status")](https://github.com/ferdn4ndo/userver-logger-api/actions)
+[![test status](https://github.com/ferdn4ndo/userver-logger-api/actions/workflows/run_tests.yml/badge.svg?branch=main "test status")](https://github.com/ferdn4ndo/userver-logger-api/actions)
 [![MIT license](https://img.shields.io/badge/license-MIT-brightgreen.svg)](https://opensource.org/licenses/MIT)
 
 <p align="center">
