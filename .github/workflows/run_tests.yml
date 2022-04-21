@@ -22,7 +22,7 @@ jobs: # Docs: <https://git.io/JvxXE>
         uses: zricethezav/gitleaks-action@v1.6.0 # Action page: <https://github.com/zricethezav/gitleaks-action>
   
   check-codebase-quality:
-    name: Check Codebase Quality
+    name: Check codebase quality
     runs-on: ubuntu-20.04
     steps:
       - name: Check out code into the Go module directory
