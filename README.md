@@ -1,10 +1,12 @@
 # uServer-Logger-API
 
 [![Go Report Card](https://goreportcard.com/badge/github.com/ferdn4ndo/userver-logger-api)](https://goreportcard.com/report/github.com/ferdn4ndo/userver-logger-api)
-[![test status](https://github.com/ferdn4ndo/userver-logger-api/workflows/tests/badge.svg?branch=main "test status")](https://github.com/ferdn4ndo/userver-logger-api/actions)
+[![test status](https://github.com/ferdn4ndo/userver-logger-api/actions/workflows/run_tests.yml/badge.svg?branch=main "test status")](https://github.com/ferdn4ndo/userver-logger-api/actions)
 [![MIT license](https://img.shields.io/badge/license-MIT-brightgreen.svg)](https://opensource.org/licenses/MIT)
 
-<img src="https://raw.githubusercontent.com/ferdn4ndo/userver-logger-api/main/static/userver-logger-logo-light.png?sanitize=true#gh-dark-mode-only" alt="uServer Logger Logo" width="264px"><img src="https://raw.githubusercontent.com/ferdn4ndo/userver-logger-api/main/static/userver-logger-logo-dark.png?sanitize=true#gh-light-mode-only" alt="Hurl Logo" width="264px">
+<p align="center">
+  <img src="https://raw.githubusercontent.com/ferdn4ndo/userver-logger-api/main/static/userver-logger-logo-dark.png?sanitize=true#gh-dark-mode-only" alt="uServer Logger Logo" width="264px"><img src="https://raw.githubusercontent.com/ferdn4ndo/userver-logger-api/main/static/userver-logger-logo-light.png?sanitize=true#gh-light-mode-only" alt="Hurl Logo" width="264px">
+</p>
 
 ---
 
@@ -139,7 +141,7 @@ docker compose -f docker-compose.dev.yml up --build
 
         *SAME AS IN 'GET /log-entries/{id}'*
 
-* **DELETE /log-entries/{id}**: deletes a single log entry. It will retrieve a `204 No Content` status code with an empty body in case of success, or a 4xx with the error message otherwise. This endpoint requires Basic Authentication (credentials configured in the environment variables);
+* **DELETE /log-entries/{id}**: deletes a single log entry. It will retrieve a `204 No Content` status code with an empty body on success, or a 4xx with the error message otherwise. This endpoint requires Basic Authentication (credentials configured in the environment variables);
 
 ## Testing
 
