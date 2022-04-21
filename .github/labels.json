@@ -1,112 +1,112 @@
 {
   "labels": {
     "bug": {
-      "name": "type:bug",
+      "name": "bug",
       "colour": "#D73A4A",
       "description": "Something isn't working"
     },
     "dependencies": {
-      "name": "type:dependencies",
+      "name": "dependencies",
       "colour": "#0366D6",
       "description": "Pull requests that update a dependency file"
     },
     "duplicate": {
-      "name": "type:duplicate",
+      "name": "duplicate",
       "colour": "#CFD3D7",
       "description": "This issue or pull request already exists"
     },
     "enhancement": {
-      "name": "type:enhancement",
+      "name": "enhancement",
       "colour": "#A2EEEF",
       "description": "A generic enhancement (not a feature)"
     },
     "github_actions": {
-      "name": "type:github_actions",
+      "name": "github_actions",
       "colour": "#000000",
       "description": "Pull requests that update GitHub Actions code"
     },
     "good_first_issue": {
-      "name": "type:good first issue",
+      "name": "good first issue",
       "colour": "#7057FF",
       "description": "Good for newcomers"
     },
     "help_wanted": {
-      "name": "type:help wanted",
+      "name": "help wanted",
       "colour": "#008672",
       "description": "Extra attention is needed"
     },
     "invalid": {
-      "name": "type:invalid",
+      "name": "invalid",
       "colour": "#E4E669",
       "description": "This doesn't seem right"
     },
     "question": {
-      "name": "type:question",
+      "name": "question",
       "colour": "#D876E3",
       "description": "Further information is requested"
     },
     "wontfix": {
-      "name": "type:wontfix",
+      "name": "wontfix",
       "colour": "#FFFFFF",
       "description": "This will not be worked on"
     },
     "critical": {
-      "name": "type:critical",
+      "name": "critical",
       "colour": "#E84137",
       "description": "This is a critical question/issue to deal with"
     },
     "feature": {
-      "name": "type:feature request",
+      "name": "feature request",
       "colour": "#1C5DA3",
       "description": "This is a feature request to develop or modify something"
     },
     "invalid_question": {
-      "name": "type:invalid question",
+      "name": "invalid question",
       "colour": "#CF2E1F",
-      "description": "This is an invalid question (not related to the project or described in document or not enough information provided)"
+      "description": "This is an invalid question (not related, already described or not enough info)"
     },
     "reproducible": {
-      "name": "type:reproducible",
+      "name": "reproducible",
       "colour": "#1CA378",
       "description": "It was possible to reproduce the described scenario"
     },
     "not_reproducible": {
-      "name": "type:not reproducible",
+      "name": "not reproducible",
       "colour": "#A31C27",
       "description": "It was NOT possible to reproduce the described scenario"
     },
     "breaking_change": {
-      "name": "type:breaking change",
+      "name": "breaking change",
       "colour": "#FF2982",
       "description": "The pull request/issue represents a breaking change compared to prior releases"
     },
     "has_pr": {
-      "name": "type:has pull request",
+      "name": "has pull request",
       "colour": "#8596AB",
       "description": "The issue has a pull request associated to it"
     },
     "waiting_for_review": {
-      "name": "type:waiting for review",
+      "name": "waiting for review",
       "colour": "#D6BD7E",
       "description": "The pull request is waiting for code review"
     },
     "waiting_for_validation": {
-      "name": "type:waiting for validation",
+      "name": "waiting for validation",
       "colour": "#F2C657",
       "description": "The pull request is waiting for validation"
     },
     "requested_changes": {
-      "name": "type:requested changes",
+      "name": "requested changes",
       "colour": "#F5782A",
       "description": "The pull request was reviewed and/or validated and changes were requested"
     },
     "review_ok": {
-      "name": "type:review ok",
+      "name": "review ok",
       "colour": "#91F246",
       "description": "The pull request review is OK (no requested changes)"
     },
     "validation_ok": {
-      "name": "type:validation ok",
+      "name": "validation ok",
       "colour": "#47F53D",
       "description": "Validation was succesfull in this pull request (no bugs found)"
     }
@@ -117,11 +117,11 @@
       "conditions": [
         {
           "type": "descriptionMatches",
-          "pattern": "/[ ]bug /i"
+          "pattern": "/^(bug|fix)/i"
         },
         {
           "type": "titleMatches",
-          "pattern": "/[ ]bug /i"
+          "pattern": "/^(bug|fix)/i"
         }
       ]
     },
@@ -180,11 +180,15 @@
       "conditions": [
         {
           "type": "descriptionMatches",
-          "pattern": "/[ ]bug /i"
+          "pattern": "/^(bug|fix)/i"
         },
         {
           "type": "titleMatches",
-          "pattern": "/[ ]bug /i"
+          "pattern": "/^(bug|fix)/i"
+        },
+        {
+          "type": "branchMatches",
+          "pattern": "^fix"
         }
       ]
     },
@@ -220,6 +224,19 @@
         {
           "type": "titleMatches",
           "pattern": "/feature/i"
+        },
+        {
+          "type": "branchMatches",
+          "pattern": "^feature"
+        }
+      ]
+    },
+    "github_actions": {
+      "requires": 1,
+      "conditions": [
+        {
+          "type": "filesMatch",
+          "glob": ".github/workflows/*.yml"
         }
       ]
     }

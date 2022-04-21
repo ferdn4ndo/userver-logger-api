@@ -16,10 +16,16 @@ on:
       - ready_for_review
       - synchronize
 
+permissions:
+  contents: read
+
 jobs:
   label-issues-and-pull-requests:
     name: Label Issues And Pull Requests
     runs-on: ubuntu-latest
+    permissions:
+      issues: write
+      pull-requests: write
     steps:
       - name: Set up Checkout
         uses: actions/checkout@v2
