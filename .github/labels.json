@@ -117,11 +117,11 @@
       "conditions": [
         {
           "type": "descriptionMatches",
-          "pattern": "/^(bug|fix)/i"
+          "pattern": "/(bug|fix)/i"
         },
         {
           "type": "titleMatches",
-          "pattern": "/^(bug|fix)/i"
+          "pattern": "/(bug|fix)/i"
         }
       ]
     },
@@ -180,11 +180,11 @@
       "conditions": [
         {
           "type": "descriptionMatches",
-          "pattern": "/^(bug|fix)/i"
+          "pattern": "/(bug|fix)/i"
         },
         {
           "type": "titleMatches",
-          "pattern": "/^(bug|fix)/i"
+          "pattern": "/(bug|fix)/i"
         },
         {
           "type": "branchMatches",
