@@ -10,10 +10,6 @@
 
 ---
 
-**DISCLAIMER: THIS IS A WORK-IN-PROGRESS! WAIT UNTIL THE FIRST RELEASE BEFORE PRODUCTION USE**
-
----
-
 A RESTful API developed in [Go](https://go.dev/) using the MSC (Model, Service, Controller) architecture to process and catalog `*.log` files (generated as the standard output of running docker containers), allowing queries with pagination and basic search capabilities.
 
 It's part of the [uServer-Logger-Slim](https://github.com/ferdn4ndo/userver-logger-slim) application, a lightweight option for a logging stack in a docker microservices environment. Compared to an ELK scenario, it would replace both Elasticsearch & Logstash services more lightly (although losing several capabilities too). The goal of this service is to be part of a Log Management tool light enough to run in a multi-container environment inside a low-to-medium EC2 instance.
