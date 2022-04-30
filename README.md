@@ -46,8 +46,6 @@ Then edit the file to tweak the settings as you wish before running the containe
 * **TEST_DATABASE_FILE**: The filename of the SQLite database file (inside the `data` folder) to use during the tests. (Default: `test.sqlite.db`)
 * **EMPTY_DATABASE_FILE**: The filename of the SQLite database file (inside the `fixture` folder) without any table, to be used when preparing a new test environment. (Default: `empty.sqlite.db`)
 
-TEST_DATABASE_FILE=test.sqlite.db
-EMPTY_DATABASE_FILE=empty.sqlite.db
 ## How to run
 
 ### In Production
