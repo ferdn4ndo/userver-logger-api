@@ -20,16 +20,16 @@ jobs:
         run: echo ${{ secrets.DOCKER_PASSWORD }} | docker login -u ${{ secrets.DOCKER_LOGIN }} --password-stdin
 
       - name: Build the Docker image
-        run: docker build -t userver-logger-api:latest .
+        run: docker build -t ferdn4ndo/userver-logger-api:latest .
 
       - name: Tag the Docker image
-        run: docker tag userver-logger-api:latest userver-logger-api:${{ steps.slug.outputs.version }}
+        run: docker tag ferdn4ndo/userver-logger-api:latest ferdn4ndo/userver-logger-api:${{ steps.slug.outputs.version }}
 
       - name: Push the Docker image to the registry
-        run: docker push userver-logger-api:${{ steps.slug.outputs.version }}
+        run: docker push ferdn4ndo/userver-logger-api:${{ steps.slug.outputs.version }}
 
       - name: Tag the GHCR Docker image
-        run: docker tag userver-logger-api:latest docker.pkg.github.com/ferdn4ndo/userver-logger-api:${{ steps.slug.outputs.version }}
+        run: docker tag ferdn4ndo/userver-logger-api:latest ghcr.io/ferdn4ndo/userver-logger-api:${{ steps.slug.outputs.version }}
 
       - name: Push the GHCR Docker image to the registry
-        run: docker push docker.pkg.github.com/ferdn4ndo/userver-logger-api:${{ steps.slug.outputs.version }}
+        run: docker push ghcr.io/ferdn4ndo/userver-logger-api:${{ steps.slug.outputs.version }}
