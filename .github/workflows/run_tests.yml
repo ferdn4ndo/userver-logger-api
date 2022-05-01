@@ -128,3 +128,15 @@ jobs: # Docs: <https://git.io/JvxXE>
 
       - name: Run UTs
         run: docker exec -i "$CONTAINER_NAME" sh -c "./scripts/run_all_tests.sh"
+
+      - name: Run UTs with coverage check
+        run: docker exec -i "$CONTAINER_NAME" sh -c "./scripts/run_all_tests_with_coverage.sh"
+      
+      - name: Upload coverage report
+        uses: codecov/codecov-action@v2
+        with:
+          files: "$DATA_DIR/coverage.xml"
+          flags: unittests
+          name: codecov-userver-logger-api
+          fail_ci_if_error: true
+          verbose: true
