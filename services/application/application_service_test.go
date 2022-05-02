@@ -6,7 +6,7 @@ import (
 )
 
 func TestGetServerPort(test *testing.T) {
-	expectedPort := 8888
+	expectedPort := 5000
 
 	appObject := Application{}
 	appPort := appObject.getServerPort()

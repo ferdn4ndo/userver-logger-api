@@ -15,11 +15,11 @@ type LogEntry struct {
 
 func (logEntry *LogEntry) Bind(request *http.Request) error {
 	if logEntry.Producer == "" {
-		return fmt.Errorf("The field 'producer' is required.")
+		return fmt.Errorf("the field 'producer' is required")
 	}
 
 	if logEntry.Message == "" {
-		return fmt.Errorf("The field 'message' is required.")
+		return fmt.Errorf("the field 'message' is required")
 	}
 
 	return nil

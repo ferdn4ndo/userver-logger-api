@@ -17,7 +17,7 @@ import (
 )
 
 // ErrNoMatch is returned when we request a row that doesn't exist
-var ErrNoMatch = fmt.Errorf("No matching record.")
+var ErrNoMatch = fmt.Errorf("no matching record")
 
 const EMPTY_DB_FIXTURE = "/go/src/github.com/ferdn4ndo/userver-logger-api/fixture/empty.sqlite.db"
 

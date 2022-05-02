@@ -3,10 +3,12 @@ package file
 import (
 	"fmt"
 	"testing"
+
+	"github.com/ferdn4ndo/userver-logger-api/services/environment"
 )
 
 func TestGetTempFolder(test *testing.T) {
-	expectedTempPath := "/go/src/github.com/ferdn4ndo/userver-logger-api/tmp"
+	expectedTempPath := environment.GetEnvKey("TMP_FOLDER")
 	computedTempPath := GetTempFolder()
 
 	if expectedTempPath != computedTempPath {
@@ -17,7 +19,7 @@ func TestGetTempFolder(test *testing.T) {
 }
 
 func TestGetDataFolder(test *testing.T) {
-	expectedTempPath := "/go/src/github.com/ferdn4ndo/userver-logger-api/data"
+	expectedTempPath := environment.GetEnvKey("DATA_FOLDER")
 	computedTempPath := GetDataFolder()
 
 	if expectedTempPath != computedTempPath {
@@ -28,7 +30,7 @@ func TestGetDataFolder(test *testing.T) {
 }
 
 func TestFixtureFolder(test *testing.T) {
-	expectedTempPath := "/go/src/github.com/ferdn4ndo/userver-logger-api/fixture"
+	expectedTempPath := environment.GetEnvKey("FIXTURE_FOLDER")
 	computedTempPath := GetFixtureFolder()
 
 	if expectedTempPath != computedTempPath {
@@ -39,7 +41,7 @@ func TestFixtureFolder(test *testing.T) {
 }
 
 func TestLogFilesFolder(test *testing.T) {
-	expectedTempPath := "/log_files"
+	expectedTempPath := environment.GetEnvKey("LOG_FILES_FOLDER")
 	computedTempPath := GetLogFilesFolder()
 
 	if expectedTempPath != computedTempPath {

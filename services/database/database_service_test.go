@@ -3,10 +3,12 @@ package database
 import (
 	"fmt"
 	"testing"
+
+	"github.com/ferdn4ndo/userver-logger-api/services/environment"
 )
 
 func TestGetDatabaseFilePath(test *testing.T) {
-	expectedDbPath := "/go/src/github.com/ferdn4ndo/userver-logger-api/data/sqlite.db"
+	expectedDbPath := fmt.Sprintf("%s/sqlite.db", environment.GetEnvKey("DATA_FOLDER"))
 	computedDbPath := getDatabaseFilePath()
 
 	if expectedDbPath != computedDbPath {
@@ -17,7 +19,7 @@ func TestGetDatabaseFilePath(test *testing.T) {
 }
 
 func TestGetEmptyFixtureFilePath(test *testing.T) {
-	expectedFixturePath := "/go/src/github.com/ferdn4ndo/userver-logger-api/fixture/empty.sqlite.db"
+	expectedFixturePath := fmt.Sprintf("%s/empty.sqlite.db", environment.GetEnvKey("FIXTURE_FOLDER"))
 	computedFixturePath := getEmptyFixtureFilePath()
 
 	if expectedFixturePath != computedFixturePath {

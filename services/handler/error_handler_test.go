@@ -13,7 +13,7 @@ func TestErrorRenderer(test *testing.T) {
 	rendererPointer := ErrorRenderer(err)
 	renderer := *rendererPointer
 
-	if 400 != renderer.StatusCode {
+	if renderer.StatusCode != 400 {
 		test.Fatalf(fmt.Sprintf("Failed asserting that the expected renderer status code is 400. (Actual: %d)", renderer.StatusCode))
 	}
 

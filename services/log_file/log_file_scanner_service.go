@@ -13,7 +13,7 @@ import (
 
 func ForeverScanLogFiles() {
 	log.Printf("Starting scanning log files forever...")
-	for true {
+	for {
 		ScanLogFiles()
 		time.Sleep(time.Second * 5)
 	}
@@ -52,7 +52,7 @@ func findLogFiles(root, ext string) []string {
 			log.Panicf("Error reading log file '%s' inside folder '%s': %s", filename, root, e)
 		}
 
-		if strings.ToLower(filepath.Ext(fileEntry.Name())) == strings.ToLower(ext) {
+		if strings.EqualFold(filepath.Ext(fileEntry.Name()), ext) {
 			filesList = append(filesList, filename)
 		}
 

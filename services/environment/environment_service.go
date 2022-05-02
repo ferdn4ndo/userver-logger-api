@@ -43,7 +43,7 @@ func (environment *EnvVarList) envHasKey(key string) bool {
 }
 
 func (environment *EnvVarList) getVariableByKey(key string) *EnvVar {
-	if environment.envHasKey(key) == false {
+	if !environment.envHasKey(key) {
 		log.Panicf("Trying to fetch unknown environment variable '%s'!\n", key)
 	}
 
@@ -61,7 +61,7 @@ func (environment *EnvVarList) fetchKeyValue(key string) string {
 
 	envValue := os.Getenv(key)
 
-	if envValue == "" && variable.Required == true && variable.DefaultValue == "" {
+	if envValue == "" && variable.Required && variable.DefaultValue == "" {
 		log.Panicf("The required environment variable '%s' is not set!\n", key)
 	}
 

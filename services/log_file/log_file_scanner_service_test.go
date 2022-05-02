@@ -2,15 +2,16 @@ package log_file
 
 import (
 	"fmt"
-	"os"
 	"testing"
+
+	"github.com/ferdn4ndo/userver-logger-api/services/file"
 )
 
 func TestFindLogFiles(test *testing.T) {
-	logFiles := findLogFiles(os.Getenv("FIXTURE_FOLDER"), ".log")
+	logFiles := findLogFiles(file.GetLogFilesFolder(), ".log")
 	logFilesCount := len(logFiles)
 
-	if 1 != logFilesCount {
+	if logFilesCount != 1 {
 		test.Fatalf(fmt.Sprintf("Failed asserting that the fixture folder log file list has one entry (actual count: %d).", logFilesCount))
 	}
 

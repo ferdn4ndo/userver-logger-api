@@ -25,7 +25,7 @@ func UnauthorizedHandler(writer http.ResponseWriter) {
 
 	err := json.NewEncoder(writer).Encode(ErrUnauthorized)
 	if err != nil {
-		log.Fatal(fmt.Sprintf("Error encoding json object: %s", err))
+		log.Fatalf("Error encoding json object: %s", err)
 		writer.WriteHeader(http.StatusInternalServerError)
 		fmt.Fprintf(writer, "An internal error occurred while encoding the json object!")
 		return

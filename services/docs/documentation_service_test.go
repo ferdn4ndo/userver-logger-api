@@ -3,10 +3,12 @@ package docs
 import (
 	"fmt"
 	"testing"
+
+	"github.com/ferdn4ndo/userver-logger-api/services/environment"
 )
 
 func TestGetApiDocsJsonFile(test *testing.T) {
-	expectedDocsPath := "/go/src/github.com/ferdn4ndo/userver-logger-api/data/routes.json"
+	expectedDocsPath := fmt.Sprintf("%s/routes.json", environment.GetEnvKey("DATA_FOLDER"))
 	computedDocsPath := getApiDocsJsonFile()
 
 	if expectedDocsPath != computedDocsPath {

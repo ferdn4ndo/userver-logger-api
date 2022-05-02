@@ -31,9 +31,9 @@ func TestEnvVarBasicAttributes(test *testing.T) {
 	expectedCurrentValue := "current"
 
 	envVar := EnvVar{
-		Key: expectedKey,
-		Description: expectedDescription,
-		Required: expectedRequired,
+		Key:          expectedKey,
+		Description:  expectedDescription,
+		Required:     expectedRequired,
 		DefaultValue: expectedDefaultValue,
 		CurrentValue: expectedCurrentValue,
 	}
@@ -52,7 +52,6 @@ func TestAddVariableToList(test *testing.T) {
 	expectedDescription := "bar"
 	expectedRequired := true
 	expectedDefaultValue := "default"
-	
 	list := EnvVarList{}
 
 	list.addVariable(expectedKey, expectedDescription, expectedRequired, expectedDefaultValue)
@@ -70,7 +69,6 @@ func TestEnvHasKey(test *testing.T) {
 	expectedDescription := "bar"
 	expectedRequired := true
 	expectedDefaultValue := "default"
-	
 	list := EnvVarList{}
 
 	list.addVariable(expectedKey, expectedDescription, expectedRequired, expectedDefaultValue)
@@ -79,7 +77,6 @@ func TestEnvHasKey(test *testing.T) {
 	if !hasKeyThatExists {
 		test.Fatalf("Failed asserting that envHasKey method succeeded with an existing key.")
 	}
-	
 	hasKeyThatDoesNotExist := list.envHasKey("random_key")
 	if hasKeyThatDoesNotExist {
 		test.Fatalf("Failed asserting that envHasKey method failed with a non-existing key.")

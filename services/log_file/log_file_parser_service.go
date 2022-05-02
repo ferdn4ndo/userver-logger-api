@@ -2,7 +2,6 @@ package log_file
 
 import (
 	"bufio"
-	"fmt"
 	"log"
 	"os"
 	"path/filepath"
@@ -22,7 +21,7 @@ func getContainerNameFromPath(fullFilePath string) string {
 func parseLogFileLine(containerName string, line string) {
 	logEntryExists, err := log_entry.CheckIfLogEntryExists(containerName, line)
 	if err != nil {
-		log.Fatal(fmt.Sprintf("Error checking if log entry exists: %s", err))
+		log.Fatalf("Error checking if log entry exists: %s", err)
 	}
 
 	if !logEntryExists {
@@ -32,7 +31,7 @@ func parseLogFileLine(containerName string, line string) {
 		}
 
 		if err := log_entry.AddLogEntry(model); err != nil {
-			log.Fatal(fmt.Sprintf("Error adding parsed log line entry: %s", err))
+			log.Fatalf("Error adding parsed log line entry: %s", err)
 		}
 	}
 }
@@ -42,7 +41,7 @@ func ParseLogFile(filename string) error {
 
 	file, err := os.Open(filename)
 	if err != nil {
-		log.Fatal(fmt.Sprintf("Error opening log file '%s': %s", filename, err))
+		log.Fatalf("Error opening log file '%s': %s", filename, err)
 	}
 	defer file.Close()
 
@@ -53,7 +52,7 @@ func ParseLogFile(filename string) error {
 	}
 
 	if err := scanner.Err(); err != nil {
-		log.Fatal(fmt.Sprintf("Error scanning log file '%s': %s", filename, err))
+		log.Fatalf("Error scanning log file '%s': %s", filename, err)
 	}
 
 	return nil
