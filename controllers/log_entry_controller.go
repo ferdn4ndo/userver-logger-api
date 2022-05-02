@@ -69,7 +69,6 @@ func GetListLogEntry(writer http.ResponseWriter, request *http.Request) {
 		return
 	}
 
-	//error = render.RenderList(writer, request, services.NewLogEntryListResponse(logEntryListPointer))
 	error = render.Render(writer, request, log_entry.NewLogEntryListResponse(logEntryListPointer, offset, limit, totalResults))
 	if error != nil {
 		render.Render(writer, request, handler.ErrorRenderer(error))

@@ -19,7 +19,7 @@ func main() {
 		panic(fmt.Sprintf("Error initializing database: %s", err))
 	}
 
-	app := application.GetBaseApplication()
+	app := application.Application{}
 	app.Routes = router.CreateRouter()
 	app.Start()
 }

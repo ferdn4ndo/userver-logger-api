@@ -29,7 +29,7 @@ type Application struct {
 
 func (app *Application) Start() {
 	app.Server = &http.Server{
-		Addr:         fmt.Sprintf(":%d", app.Port),
+		Addr:         fmt.Sprintf(":%d", app.getServerPort()),
 		Handler:      app.Routes,
 		IdleTimeout:  time.Minute,
 		ReadTimeout:  10 * time.Second,
@@ -39,7 +39,7 @@ func (app *Application) Start() {
 	log.Printf("Opening server port %s", app.Server.Addr)
 	listener, error := net.Listen("tcp", app.Server.Addr)
 	if error != nil {
-		log.Fatalf("Error occurred when opening port %d: %s", app.Port, error.Error())
+		log.Fatalf("Error occurred when opening port %d: %s", app.getServerPort(), error.Error())
 	}
 
 	log.Printf("Starting server...")
@@ -57,6 +57,7 @@ func (app *Application) Start() {
 func (app *Application) Stop() {
 	context, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
+
 	if error := app.Server.Shutdown(context); error != nil {
 		log.Printf("Could not shut down server correctly: %v\n", error)
 		os.Exit(1)
@@ -70,15 +71,4 @@ func (app *Application) getServerPort() int {
 	}
 
 	return port
-}
-
-func GetBaseApplication() *Application {
-	app := Application{}
-
-	app.Auth.Username = environment.GetEnvKey("BASIC_AUTH_USERNAME")
-	app.Auth.Password = environment.GetEnvKey("BASIC_AUTH_PASSWORD")
-
-	app.Port = app.getServerPort()
-
-	return &app
 }

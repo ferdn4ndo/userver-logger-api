@@ -52,7 +52,7 @@ func getDatabaseFilePath() string {
 	return fmt.Sprintf("%s/%s", dataFolder, databaseFile)
 }
 
-func geEmptyFixtureFilePath() string {
+func getEmptyFixtureFilePath() string {
 	fixtureFolder := file.GetFixtureFolder()
 	emptyDatabaseFile := environment.GetEnvKey("EMPTY_DATABASE_FILE")
 
@@ -67,7 +67,7 @@ func createEmptyDatabase() error {
 		log.Panicf("Database file '%s' already exists!", databasePath)
 	}
 
-	emptyFixturePath := geEmptyFixtureFilePath()
+	emptyFixturePath := getEmptyFixtureFilePath()
 	emptyFixtureData, err := ioutil.ReadFile(emptyFixturePath)
 	if err != nil {
 		return err

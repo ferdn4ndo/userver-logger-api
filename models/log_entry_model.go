@@ -13,7 +13,7 @@ type LogEntry struct {
 	CreatedAt time.Time `gorm:"autoCreateTime" json:"created_at"`
 }
 
-func (logEntry *LogEntry) Bind(r *http.Request) error {
+func (logEntry *LogEntry) Bind(request *http.Request) error {
 	if logEntry.Producer == "" {
 		return fmt.Errorf("The field 'producer' is required.")
 	}
@@ -25,6 +25,6 @@ func (logEntry *LogEntry) Bind(r *http.Request) error {
 	return nil
 }
 
-func (*LogEntry) Render(w http.ResponseWriter, r *http.Request) error {
+func (*LogEntry) Render(writer http.ResponseWriter, request *http.Request) error {
 	return nil
 }

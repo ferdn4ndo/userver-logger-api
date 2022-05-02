@@ -45,20 +45,24 @@ func (errorResponse *ErrorResponse) Render(writer http.ResponseWriter, request *
 	return nil
 }
 
+const BadRequestStatusText = "There was a bad request."
+
 func ErrorRenderer(err error) *ErrorResponse {
 	return &ErrorResponse{
 		Err:        err,
 		StatusCode: 400,
-		StatusText: "There was a bad request.",
+		StatusText: BadRequestStatusText,
 		Message:    err.Error(),
 	}
 }
+
+const InternalServerErrorStatusText = "An internal server error has occurred."
 
 func ServerErrorRenderer(err error) *ErrorResponse {
 	return &ErrorResponse{
 		Err:        err,
 		StatusCode: 500,
-		StatusText: "An internal server error has occurred.",
+		StatusText: InternalServerErrorStatusText,
 		Message:    err.Error(),
 	}
 }

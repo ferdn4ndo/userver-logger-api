@@ -31,6 +31,6 @@ func (logEntryRequest *LogEntryRequest) Bind(request *http.Request) error {
 
 	// just a post-process after a decode..
 	logEntryRequest.ProtectedID = "" // unset the protected ID
-	//a.Article.Title = strings.ToLower(a.Article.Title) // as an example, we down-case
+
 	return nil
 }

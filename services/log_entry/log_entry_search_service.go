@@ -22,7 +22,6 @@ func GetLogEntrySearchParams(request *http.Request) *LogEntrySearchParams {
 }
 
 func ApplyLogEntryQuerySearchParams(query *gorm.DB, params *LogEntrySearchParams) *gorm.DB {
-
 	if params.Producer != "" {
 		query.Where("producer = ?", params.Producer)
 	}
