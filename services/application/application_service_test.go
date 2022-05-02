@@ -5,23 +5,14 @@ import (
 	"testing"
 )
 
-func TestGetBaseApplication(test *testing.T) {
-	expectedUsername := "test"
-	expectedPassword := "@StR0ng!P4ssW0rD+"
+func TestGetServerPort(test *testing.T) {
 	expectedPort := 8888
 
-	appObject := GetBaseApplication()
+	appObject := Application{}
+	appPort := appObject.getServerPort()
 
-	if expectedUsername != appObject.Auth.Username {
-		test.Errorf(fmt.Sprintf("Failed asserting that the auth username '%s' matches the expected '%s'.", appObject.Auth.Username, expectedUsername))
-	}
-
-	if expectedPassword != appObject.Auth.Password {
-		test.Errorf(fmt.Sprintf("Failed asserting that the auth username '%s' matches the expected '%s'.", appObject.Auth.Username, expectedUsername))
-	}
-
-	if expectedPort != appObject.Port {
-		test.Errorf(fmt.Sprintf("Failed asserting that the auth username '%s' matches the expected '%s'.", appObject.Auth.Username, expectedUsername))
+	if expectedPort != appPort {
+		test.Fatalf(fmt.Sprintf("Failed asserting that the server port '%d' matches the expected '%d'.", appPort, expectedPort))
 	}
 
 	test.Log("Finished testing the GetBaseApplication() method")
