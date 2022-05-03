@@ -43,7 +43,7 @@ Then edit the file to tweak the settings as you wish before running the containe
 * **FIXTURE_FOLDER**: The location of the fixture files for preloading internal service data. (Default: `/go/src/github.com/ferdn4ndo/userver-logger-api/fixture`)
 * **DATABASE_FILE**: The filename of the SQLite database file (inside the `data` folder) to store the parsed log entries. (Default: `sqlite.db`)
 * **TEST_DATABASE_FILE**: The filename of the SQLite database file (inside the `data` folder) to use during the tests. (Default: `test.sqlite.db`)
-* **EMPTY_DATABASE_FILE**: The filename of the SQLite database file (inside the `fixture` folder) without any table, to be used when preparing a new test environment. (Default: `empty.sqlite.db`)
+* **EMPTY_DATABASE_FILE**: The filename of the SQLite database file (inside the `fixture` folder) without any table, to be used when preparing a new test environment.
 
 ## How to run
 
@@ -85,7 +85,7 @@ docker compose -f docker-compose.dev.yml up --build
 
 * **GET /health**: provides basic health checking, retrieving a 200 OK (and internally registering a heartbeat) when up & running; This endpoint requires NO authentication;
 
-* **GET /log-entries**: provides basic health checking, retrieving a 200 OK (and internally registering a heartbeat) when up & running; This endpoint requires Basic Authentication (credentials configured in the environment variables);
+* **GET /log-entries**: lists all the log entries (with pagination and filtering. This endpoint requires Basic Authentication (credentials configured in the environment variables);
 
     * Query parameters:
         
@@ -115,17 +115,12 @@ docker compose -f docker-compose.dev.yml up --build
 
 * **GET /log-entries/{id}**: retrieves a single log entry. It will retrieve a `200 Ok` status code with the requested log entry in case of success, or a 4xx with the error message otherwise. This endpoint requires Basic Authentication (credentials configured in the environment variables);
 
-    * URL parameters:
-
-        * `producer`: The name of the producer of the log entry;
-        * `message`: The message (content) of the log entry;
-
     * Response schema:
 
         * `id`: The unique ID of the log entry;
         * `producer`: The name of the producer of the log entry;
         * `message`: The message (content) of the log entry;
-        * `created_at`: The timestamp (in ISO 8601 format) when the log entry was registered in the application (note that this is different then the log creation timestamp, which should be part of the log message).
+        * `created_at`: The timestamp (in ISO 8601 format) when the log entry was registered in the application (note that this is different than the log creation timestamp, which should be part of the log message).
 
 * **PUT /log-entries/{id}**: updates a single log entry. It will retrieve a `200 Ok` status code with the updated log entry in case of success, or a 4xx with the error message otherwise. This endpoint requires Basic Authentication (credentials configured in the environment variables);
 
@@ -163,7 +158,7 @@ docker exec -it userver-logger-api sh -c "./scripts/get_test_coverage_percentage
 
 ## F.A.Q.
 
-### 1 - Why using the SQLite driver?
+### 1 - Why use the SQLite driver?
 R: Because the logging container aims to be one of the very first services started on a web application stack. It should avoid any other later service dependency, and it can be potentially used to monitor the main database container (therefore not being able to depend on it).
 
 ### 2 - I found a bug / I want a new feature. What should I do?
@@ -178,4 +173,3 @@ This application is distributed under the [MIT](https://github.com/ferdn4ndo/use
 [ferdn4ndo](https://github.com/ferdn4ndo)
 
 Any help is appreciated! Feel free to review / open an issue / fork / make a PR.
-

@@ -81,6 +81,9 @@ jobs: # Docs: <https://git.io/JvxXE>
       FIXTURE_FOLDER: /home/runner/work/userver-logger-api/userver-logger-api/fixture
       CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
     steps:
+      - name: Check out code
+        uses: actions/checkout@v3
+
       - name: Download built docker image
         uses: actions/download-artifact@v3
         with:
@@ -113,19 +116,20 @@ jobs: # Docs: <https://git.io/JvxXE>
       - name: Execute test call
         run: curl http://localhost:5000/health
 
-      - name: Run UTs
-        run: docker exec -i "$CONTAINER_NAME" sh -c "./scripts/run_all_tests.sh"
-
       - name: Run UTs with coverage check
         run: docker exec -i "$CONTAINER_NAME" sh -c "./scripts/run_all_tests_with_coverage.sh"
 
       - name: Copy coverage report file
-        run: docker cp "$CONTAINER_NAME":"$DATA_FOLDER/coverage.xml" ./coverage.xml
+        run: docker cp "$CONTAINER_NAME":"$DATA_FOLDER/coverage.txt" ./coverage.txt
+
+      - name: View report
+        run: cat ./coverage.txt
 
       - name: Upload coverage report
         uses: codecov/codecov-action@v2
         with:
-          files: ./coverage.xml
+          token: ${{ secrets.CODECOV_TOKEN }}
+          files: ./coverage.txt
           flags: unittests
           name: codecov-userver-logger-api
           fail_ci_if_error: true
