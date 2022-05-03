@@ -79,6 +79,7 @@ jobs: # Docs: <https://git.io/JvxXE>
       DATA_FOLDER: /home/runner/work/userver-logger-api/userver-logger-api/data
       LOG_FILES_FOLDER: /home/runner/work/userver-logger-api/userver-logger-api/data
       FIXTURE_FOLDER: /home/runner/work/userver-logger-api/userver-logger-api/fixture
+      CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
     steps:
       - name: Download built docker image
         uses: actions/download-artifact@v3
