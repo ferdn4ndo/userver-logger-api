@@ -2,10 +2,15 @@ package router
 
 import (
 	"testing"
+
+	"github.com/ferdn4ndo/userver-logger-api/services/database"
+	"github.com/ferdn4ndo/userver-logger-api/services/render"
 )
 
 func TestHealthRouter(test *testing.T) {
-	router := HealthRouter()
+	dbService := &database.MockedDatabaseService{}
+	renderService := &render.RenderService{}
+	router := HealthRouter(dbService, renderService)
 
 	expectedRoutesCount := 1
 	actualRoutesCount := len(router.Routes())
@@ -14,7 +19,7 @@ func TestHealthRouter(test *testing.T) {
 	}
 
 	routeZeroPattern := router.Routes()[0].Pattern
-	if "/" != routeZeroPattern {
+	if routeZeroPattern != "/" {
 		test.Fatalf("Failed asserting that the route #0 pattern is equal to '/' (actual: '%s')!", routeZeroPattern)
 	}
 

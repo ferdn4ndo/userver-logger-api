@@ -8,7 +8,7 @@ import (
 
 type LogEntry struct {
 	ID        uint      `gorm:"primaryKey" json:"id"`
-	Producer  string    `json:"producer"`
+	Producer  string    `gorm:"type:string,index" json:"producer"`
 	Message   string    `gorm:"type:text" json:"message"`
 	CreatedAt time.Time `gorm:"autoCreateTime" json:"created_at"`
 }

@@ -1,24 +1,34 @@
 package controllers
 
 import (
-	"fmt"
 	"net/http"
 
-	"github.com/go-chi/render"
-
 	"github.com/ferdn4ndo/userver-logger-api/services/database"
-	"github.com/ferdn4ndo/userver-logger-api/services/handler"
+	"github.com/ferdn4ndo/userver-logger-api/services/health"
+	"github.com/ferdn4ndo/userver-logger-api/services/render"
 )
 
-// GET /health
-func GetHealthState(writer http.ResponseWriter, request *http.Request) {
-	db, err := database.GetDatabaseService()
-	if err != nil {
-		render.Render(writer, request, handler.ServerErrorRenderer(err))
+const STATUS_OK string = "OK"
 
-		return
-	}
+type HealthController struct {
+	DbService     database.DatabaseServiceInterface
+	RenderService render.RenderServiceInterface
+}
 
-	database.AddHeartbeatLog(db)
-	fmt.Fprintf(writer, "It's just fine.")
+type HealthData struct {
+	Status          string `json:"status"`
+	DbSize          int64  `json:"databaseSizeInBytes"`
+	LogEntriesCount int64  `json:"logEntriesCount"`
+}
+
+func (healthData *HealthData) Render(writer http.ResponseWriter, request *http.Request) error {
+	return nil
+}
+
+func (controller HealthController) GetHealthState(writer http.ResponseWriter, request *http.Request) {
+	healthService := health.HealthService{DbService: controller.DbService}
+
+	data := healthService.GetHealthData()
+
+	controller.RenderService.Render(writer, request, data)
 }

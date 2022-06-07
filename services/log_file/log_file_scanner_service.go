@@ -9,26 +9,33 @@ import (
 
 	"github.com/ferdn4ndo/userver-logger-api/services/checksum"
 	"github.com/ferdn4ndo/userver-logger-api/services/file"
+	"github.com/ferdn4ndo/userver-logger-api/services/log_entry"
 )
 
-func ForeverScanLogFiles() {
+type LogFileScannerService struct {
+	LogEntryDbService log_entry.LogEntryDatabaseService
+}
+
+func (service LogFileScannerService) ForeverScanLogFiles() {
+	logFileScannerService := &LogFileScannerService{LogEntryDbService: service.LogEntryDbService}
+
 	log.Printf("Starting scanning log files forever...")
 	for {
-		ScanLogFiles()
+		logFileScannerService.ScanLogFiles()
 		time.Sleep(time.Second * 5)
 	}
 }
 
-func ScanLogFiles() {
+func (service LogFileScannerService) ScanLogFiles() {
 	logsFolderPath := file.GetLogFilesFolder()
 	logFiles := findLogFiles(logsFolderPath, ".log")
 
 	for _, file := range logFiles {
-		CheckLogFile(file)
+		service.CheckLogFile(file)
 	}
 }
 
-func CheckLogFile(filename string) {
+func (service LogFileScannerService) CheckLogFile(filename string) {
 	cachedFileChecksum := checksum.GetCachedFileChecksum(filename)
 
 	computedFileChecksum, err := checksum.ComputeFileChecksum(filename)
@@ -36,11 +43,37 @@ func CheckLogFile(filename string) {
 		log.Panicf("Error checking log file '%s': %s", filename, err)
 	}
 
-	needsUpdate := cachedFileChecksum == "" || cachedFileChecksum != computedFileChecksum
-	if needsUpdate {
-		log.Printf("File '%s' was updated, computing SHA256 hash and parsing lines...", filename)
-		checksum.SetCachedFileChecksum(filename, computedFileChecksum)
-		ParseLogFile(filename)
+	needsChecksumUpdate := cachedFileChecksum == "" || cachedFileChecksum != computedFileChecksum
+	if !needsChecksumUpdate {
+		// log.Printf("File '%s' SHA256 was not updated, skipping...", filename)
+		return
+	}
+
+	log.Printf("SHA256 checksum for file '%s' has changed!", filename)
+	checksum.SetCachedFileChecksum(filename, computedFileChecksum)
+
+	consumedFileService := &file.ConsumedLinesFileService{LogFilePath: filename}
+	if !consumedFileService.RequiresUpdate() {
+		log.Print("No differences detected between current log file and the last consumed one, skipping...")
+		return
+	}
+
+	log.Printf("Detected diff for last consumed lines on file '%s', updating...", filename)
+
+	diff, err := consumedFileService.GetLastConsumedFileDiff()
+	if err != nil {
+		log.Fatalf("Error getting last consumed file diff: %s", err)
+	}
+
+	diffParserService := &LogDiffParserService{
+		Producer:          consumedFileService.GetProducer(),
+		Diff:              diff,
+		LogEntryDbService: service.LogEntryDbService,
+	}
+
+	err = diffParserService.ParseDiff()
+	if err != nil {
+		log.Fatalf("Error parsing diff: %s", err)
 	}
 }
 

@@ -17,7 +17,7 @@ RUN adduser \
 
 WORKDIR /go/src/github.com/ferdn4ndo/userver-logger-api
 
-RUN apt-get update && apt-get install -y git gcc musl-dev ca-certificates curl sqlite3 && update-ca-certificates
+RUN apt-get update && apt-get install -y git gcc musl-dev ca-certificates curl sqlite3 coreutils && update-ca-certificates
 
 COPY ./ /go/src/github.com/ferdn4ndo/userver-logger-api/
 

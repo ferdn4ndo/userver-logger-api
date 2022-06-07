@@ -1,8 +1,7 @@
 package handler
 
 import (
-	"encoding/json"
-	"log"
+	"fmt"
 	"net/http"
 
 	"github.com/go-chi/render"
@@ -40,8 +39,6 @@ var (
 func (errorResponse *ErrorResponse) Render(writer http.ResponseWriter, request *http.Request) error {
 	render.Status(request, errorResponse.StatusCode)
 
-	json.NewEncoder(writer).Encode(errorResponse)
-
 	return nil
 }
 
@@ -67,23 +64,11 @@ func ServerErrorRenderer(err error) *ErrorResponse {
 	}
 }
 
-func AddCustomErrorHandlerfunc(writer http.ResponseWriter, request *http.Request, value interface{}) {
-	if err, ok := value.(error); ok {
-
-		// We set a default error status response code if one hasn't been set.
-		if _, ok := request.Context().Value(render.StatusCtxKey).(int); !ok {
-			writer.WriteHeader(400)
-		}
-
-		// We log the error
-		log.Printf("Logging err: %s\n", err.Error())
-
-		// We change the response to not reveal the actual error message,
-		// instead we can transform the message something more friendly or mapped
-		// to some code / language, etc.
-		render.DefaultResponder(writer, request, render.M{"status": "error"})
-		return
+func ServerErrorMsgRenderer(message string) *ErrorResponse {
+	return &ErrorResponse{
+		Err:        fmt.Errorf(message),
+		StatusCode: 500,
+		StatusText: InternalServerErrorStatusText,
+		Message:    message,
 	}
-
-	render.DefaultResponder(writer, request, value)
 }

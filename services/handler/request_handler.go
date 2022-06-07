@@ -10,7 +10,7 @@ import (
 	"github.com/go-chi/render"
 )
 
-func NewHandler() http.Handler {
+func NewHandler() *chi.Mux {
 	router := chi.NewRouter()
 	router.MethodNotAllowed(methodNotAllowedHandler)
 	router.NotFound(notFoundHandler)
@@ -40,6 +40,11 @@ func methodNotAllowedHandler(writer http.ResponseWriter, request *http.Request) 
 
 func notFoundHandler(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-type", "application/json")
-	w.WriteHeader(400)
+	w.WriteHeader(404)
 	render.Render(w, r, ErrNotFound)
+}
+
+type ControllerHandler struct {
+	Writer  http.ResponseWriter
+	Request *http.Request
 }

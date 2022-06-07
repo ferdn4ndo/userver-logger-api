@@ -8,13 +8,10 @@ import (
 	"net/http"
 	"os"
 	"os/signal"
-	"strconv"
 	"syscall"
 	"time"
 
 	"github.com/go-chi/chi/v5"
-
-	"github.com/ferdn4ndo/userver-logger-api/services/environment"
 )
 
 type Application struct {
@@ -22,14 +19,13 @@ type Application struct {
 		Username string
 		Password string
 	}
-	Port   int
 	Routes chi.Router
 	Server *http.Server
 }
 
 func (app *Application) Start() {
 	app.Server = &http.Server{
-		Addr:         fmt.Sprintf(":%d", app.getServerPort()),
+		Addr:         fmt.Sprintf(":%d", 5555),
 		Handler:      app.Routes,
 		IdleTimeout:  time.Minute,
 		ReadTimeout:  10 * time.Second,
@@ -39,10 +35,10 @@ func (app *Application) Start() {
 	log.Printf("Opening server port %s", app.Server.Addr)
 	listener, error := net.Listen("tcp", app.Server.Addr)
 	if error != nil {
-		log.Fatalf("Error occurred when opening port %d: %s", app.getServerPort(), error.Error())
+		log.Fatalf("Error occurred when opening '%s': %s", app.Server.Addr, error.Error())
 	}
 
-	log.Printf("Starting server...")
+	log.Printf("Listening connections...")
 	go func() {
 		app.Server.Serve(listener)
 	}()
@@ -62,13 +58,4 @@ func (app *Application) Stop() {
 		log.Printf("Could not shut down server correctly: %v\n", error)
 		os.Exit(1)
 	}
-}
-
-func (app *Application) getServerPort() int {
-	port, err := strconv.Atoi(environment.GetEnvKey("SERVER_PORT"))
-	if err != nil {
-		log.Fatal("Unable to determine application port!")
-	}
-
-	return port
 }

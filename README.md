@@ -36,7 +36,6 @@ Then edit the file to tweak the settings as you wish before running the containe
 * **LETSENCRYPT_EMAIL**: The hostmaster e-mail to use in the SSL certificate generation by [Let's Encrypt](https://letsencrypt.org/) if you're running the container behind a reverse proxy. (Default: `[EMPTY]`)
 * **BASIC_AUTH_USERNAME**: The username to use in the Basic Authentication of the API endpoints. (Default: `[EMPTY]`) **[REQUIRED]**
 * **BASIC_AUTH_PASSWORD**: The password to use in the Basic Authentication of the API endpoints. (Default: `[EMPTY]`) **[REQUIRED]**
-* **SERVER_PORT**: The port used to expose the API service. (Default: `5000`)
 * **LOG_FILES_FOLDER**: The location of the log files to be watched. (Default: `/log_files`)
 * **TMP_FOLDER**: The location of the temporary files created while running the service. (Default: `/go/src/github.com/ferdn4ndo/userver-logger-api/tmp`)
 * **DATA_FOLDER**: The location of the temporary files created while running the service. (Default: `/go/src/github.com/ferdn4ndo/userver-logger-api/data`)
@@ -56,11 +55,11 @@ To build the image:
 docker build -f ./Dockerfile --tag userver-logger-api:latest .
 ```
 
-For a single container run (that will expose port `5000` by default):
+For a single container run (that will expose port `5555` by default):
 
 ```
 # Assuming .env file is at the current location
-docker run -d --rm -e 5000 -v "$DATA_DIR":/data --env-file ./env "$CONTAINER_NAME":local
+docker run -d --rm -e 5555 -v "$DATA_DIR":/data --env-file ./env "$CONTAINER_NAME":local
 ```
 
 Docker-compose version (will build and run):
@@ -88,7 +87,7 @@ docker compose -f docker-compose.dev.yml up --build
 * **GET /log-entries**: lists all the log entries (with pagination and filtering. This endpoint requires Basic Authentication (credentials configured in the environment variables);
 
     * Query parameters:
-        
+
         * `size`: Number of results per page (min: 1, max: 1000, default: 100);
         * `offset`: Number of results to skip before starting the page (min: 0, default: 0);
         * `producer`: The name of the producer to filter the results (exact match);

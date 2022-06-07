@@ -2,10 +2,13 @@ package router
 
 import (
 	"testing"
+
+	"github.com/ferdn4ndo/userver-logger-api/services/database"
 )
 
 func TestCreateRouter(test *testing.T) {
-	router := CreateRouter()
+	dbService := &database.MockedDatabaseService{}
+	router := CreateRouter(dbService, false)
 
 	expectedRoutesCount := 2
 	actualRoutesCount := len(router.Routes())
@@ -14,12 +17,12 @@ func TestCreateRouter(test *testing.T) {
 	}
 
 	routeZeroPattern := router.Routes()[0].Pattern
-	if "/health/*" != routeZeroPattern {
+	if routeZeroPattern != "/health/*" {
 		test.Fatalf("Failed asserting that the route #0 pattern is equal to '/health/*' (actual: '%s')!", routeZeroPattern)
 	}
 
 	routeOnePattern := router.Routes()[1].Pattern
-	if "/log-entries/*" != routeOnePattern {
+	if routeOnePattern != "/log-entries/*" {
 		test.Fatalf("Failed asserting that the route #1 pattern is equal to '/log-entries/*' (actual: '%s')!", routeOnePattern)
 	}
 

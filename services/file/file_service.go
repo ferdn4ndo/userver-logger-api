@@ -3,6 +3,8 @@ package file
 import (
 	"log"
 	"os"
+	"path/filepath"
+	"strings"
 
 	"github.com/ferdn4ndo/userver-logger-api/services/environment"
 )
@@ -47,4 +49,11 @@ func GetLogFilesFolder() string {
 	createFolderIfNotExists(logFilesFolder)
 
 	return logFilesFolder
+}
+
+func GetContainerNameFromPath(fullFilePath string) string {
+	filename := filepath.Base(fullFilePath)
+	extension := filepath.Ext(filename)
+
+	return strings.TrimSuffix(filename, extension)
 }

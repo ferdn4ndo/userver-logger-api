@@ -1,0 +1,43 @@
+package render
+
+import (
+	"encoding/json"
+	"fmt"
+	"net/http"
+
+	chiRender "github.com/go-chi/render"
+
+	"github.com/ferdn4ndo/userver-logger-api/services/handler"
+)
+
+type RenderInterface interface {
+	Render(writer http.ResponseWriter, request *http.Request) error
+}
+
+type RenderServiceInterface interface {
+	Render(writer http.ResponseWriter, request *http.Request, data RenderInterface)
+}
+
+type RenderService struct{}
+
+func (service RenderService) Render(writer http.ResponseWriter, request *http.Request, data RenderInterface) {
+	error := chiRender.Render(writer, request, data)
+	if error != nil {
+		chiRender.Render(writer, request, handler.ServerErrorRenderer(error))
+
+		return
+	}
+}
+
+type MockedRenderService struct{}
+
+func (service MockedRenderService) Render(writer http.ResponseWriter, request *http.Request, data RenderInterface) {
+	bytes, err := json.Marshal(data)
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+
+	fmt.Print(string(bytes))
+	data.Render(writer, request)
+}

@@ -21,12 +21,20 @@ var ErrNoMatch = fmt.Errorf("no matching record")
 
 const EMPTY_DB_FIXTURE = "/go/src/github.com/ferdn4ndo/userver-logger-api/fixture/empty.sqlite.db"
 
-type DatabaseService struct {
-	Conn *gorm.DB
+type DatabaseServiceInterface interface {
+	GetDbConn() *gorm.DB
+	AddHeartbeatLog() error
+	Close()
+	GetDatabaseFileSize() int64
+	GetLogEntriesTotalCount() int64
 }
 
-func (db *DatabaseService) Close() {
-	sqlDB, err := db.Conn.DB()
+type DatabaseService struct {
+	conn *gorm.DB
+}
+
+func (db DatabaseService) Close() {
+	sqlDB, err := db.GetDbConn().DB()
 
 	if err != nil {
 		panic("Error closing DB connection!")
@@ -36,13 +44,38 @@ func (db *DatabaseService) Close() {
 	sqlDB.Close()
 }
 
-func AddHeartbeatLog(db *DatabaseService) error {
+func (db DatabaseService) GetDbConn() *gorm.DB {
+	return db.conn
+}
+
+func (db DatabaseService) GetDatabaseFileSize() int64 {
+	file, err := os.Open(getDatabaseFilePath())
+	if err != nil {
+		log.Fatalf("Error opening database file: %s", err)
+	}
+
+	fileStats, err := file.Stat()
+	if err != nil {
+		log.Fatalf("Error checking database file: %s", err)
+	}
+
+	return fileStats.Size()
+}
+
+func (db DatabaseService) AddHeartbeatLog() error {
 	currentTime := time.Now().Format(time.RFC3339)
-	result := db.Conn.Create(&models.LogEntry{
+	result := db.GetDbConn().Create(&models.LogEntry{
 		Producer: "userver-logger-api",
 		Message:  "Heartbeat from userver-logger-api at " + currentTime})
 
 	return result.Error
+}
+
+func (db DatabaseService) GetLogEntriesTotalCount() int64 {
+	var logEntriesCount int64
+	db.GetDbConn().Model(&models.LogEntry{}).Count(&logEntriesCount)
+
+	return logEntriesCount
 }
 
 func getDatabaseFilePath() string {
@@ -81,13 +114,13 @@ func createEmptyDatabase() error {
 	return nil
 }
 
-func InitializeDatabase() (*DatabaseService, error) {
+func InitializeDatabase() DatabaseServiceInterface {
 	databasePath := getDatabaseFilePath()
 
 	if _, err := os.Stat(databasePath); errors.Is(err, os.ErrNotExist) {
 		err = createEmptyDatabase()
 		if err != nil {
-			return nil, err
+			log.Fatalf("Error creating empty database: %s", err)
 		}
 	}
 
@@ -95,31 +128,57 @@ func InitializeDatabase() (*DatabaseService, error) {
 
 	db, err := gorm.Open(conn, &gorm.Config{})
 	if err != nil {
-		return nil, err
+		log.Fatalf("Error opening DB connection: %s", err)
 	}
 
-	service := &DatabaseService{Conn: db}
+	service := DatabaseService{conn: db}
 
 	log.Println("Migrating the schema...")
-	service.Conn.AutoMigrate(&models.LogEntry{})
+	if err = service.conn.AutoMigrate(&models.LogEntry{}); err != nil {
+		log.Fatalf("Error applying DB migrations: %s", err)
+	}
 
-	AddHeartbeatLog(service)
+	if err := service.AddHeartbeatLog(); err != nil {
+		log.Fatalf("Error adding heartbeat: %s", err)
+	}
 
 	log.Println("Database connection established!")
 
-	return service, nil
+	return service
 }
 
-func GetDatabaseService() (*DatabaseService, error) {
+func GetDatabaseService() (DatabaseService, error) {
 	databasePath := getDatabaseFilePath()
 	conn := sqlite.Open(databasePath)
 
 	db, err := gorm.Open(conn, &gorm.Config{})
 	if err != nil {
-		return nil, err
+		return DatabaseService{}, err
 	}
 
-	service := &DatabaseService{Conn: db}
+	service := DatabaseService{conn: db}
 
 	return service, nil
+}
+
+type MockedDatabaseService struct{}
+
+func (MockedDatabaseService) GetDbConn() *gorm.DB {
+	return nil
+}
+
+func (MockedDatabaseService) AddHeartbeatLog() error {
+	return nil
+}
+
+func (MockedDatabaseService) Close() {
+	fmt.Println("Mocking Close call")
+}
+
+func (MockedDatabaseService) GetDatabaseFileSize() int64 {
+	return 1024
+}
+
+func (MockedDatabaseService) GetLogEntriesTotalCount() int64 {
+	return 100
 }

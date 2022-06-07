@@ -7,19 +7,28 @@ import (
 	"github.com/ferdn4ndo/userver-logger-api/services/pagination"
 )
 
-func NewLogEntryResponse(logEntry *models.LogEntry) *models.LogEntryResponse {
+type LogEntryResponseServiceInterface interface {
+	NewLogEntryResponse(logEntry *models.LogEntry) *models.LogEntryResponse
+	NewLogEntryListResponse(logEntries *models.LogEntryList, offset int, limit int, totalCount int) *pagination.PaginatedResponse
+}
+
+type LogEntryResponseService struct {
+	PaginationService pagination.PaginationServiceInterface
+}
+
+func (service LogEntryResponseService) NewLogEntryResponse(logEntry *models.LogEntry) *models.LogEntryResponse {
 	resp := &models.LogEntryResponse{LogEntry: logEntry}
 
 	return resp
 }
 
-func NewLogEntryListResponse(logEntries *models.LogEntryList, offset int, limit int, totalCount int) *pagination.PaginatedResponse {
+func (service LogEntryResponseService) NewLogEntryListResponse(logEntries *models.LogEntryList, offset int, limit int, totalCount int) *pagination.PaginatedResponse {
 	list := []render.Renderer{}
 	for _, logEntry := range logEntries.LogEntries {
-		list = append(list, NewLogEntryResponse(logEntry))
+		list = append(list, service.NewLogEntryResponse(logEntry))
 	}
 
-	paginationResponse := pagination.PreparePaginatedResponse(list, offset, limit, totalCount)
+	paginationResponse := service.PaginationService.PreparePaginatedResponse(list, totalCount)
 
 	return &paginationResponse
 }
