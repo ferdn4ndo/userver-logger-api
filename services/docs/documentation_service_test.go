@@ -12,7 +12,7 @@ func TestGetApiDocsJsonFile(test *testing.T) {
 	computedDocsPath := getApiDocsJsonFile()
 
 	if expectedDocsPath != computedDocsPath {
-		test.Fatalf(fmt.Sprintf("Failed asserting that the computed API Docs json path '%s' is equal to expected '%s'.", computedDocsPath, expectedDocsPath))
+		test.Fatalf("Failed asserting that the computed API Docs json path '%s' is equal to expected '%s'.", computedDocsPath, expectedDocsPath)
 	}
 
 	test.Log("Finished testing the getApiDocsJsonFile() method")

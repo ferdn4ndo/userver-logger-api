@@ -13,7 +13,7 @@ func TestComputeFileChecksum(test *testing.T) {
 
 	computedChecksum, _ := ComputeFileChecksum(fileFullPath)
 	if expectedChecksum != computedChecksum {
-		test.Fatalf(fmt.Sprintf("Failed asserting that the computed checksum '%s' is equal to expected '%s'.", computedChecksum, expectedChecksum))
+		test.Fatalf("Failed asserting that the computed checksum '%s' is equal to expected '%s'.", computedChecksum, expectedChecksum)
 	}
 
 	test.Log("Finished testing the ComputeFileChecksum() method")
