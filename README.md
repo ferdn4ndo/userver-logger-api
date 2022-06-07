@@ -177,4 +177,4 @@ This application is distributed under the [MIT](https://github.com/ferdn4ndo/use
 
 [ferdn4ndo](https://github.com/ferdn4ndo)
 
-Any help is appreciated! Feel free to review / open an issue / fork / make a PR.
+Any help is appreciated! Feel free to review / open an issue / fork / open a PR.
