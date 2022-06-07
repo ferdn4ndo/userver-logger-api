@@ -60,7 +60,7 @@ func Errorf(message string, arguments ...any) bool {
 
 // Logs a warning message (in case the current log level includes it)
 func Warning(message string) bool {
-	return printMessageIfLevelAllows(LOG_LEVEL_ERROR, "[WARNING] %s\n", message)
+	return printMessageIfLevelAllows(LOG_LEVEL_WARNING, "[WARNING] %s\n", message)
 }
 
 // A Sprintf-like method for a Warning level message
@@ -70,7 +70,7 @@ func Warningf(message string, arguments ...any) bool {
 
 // Logs an info message (in case the current log level includes it)
 func Info(message string) bool {
-	return printMessageIfLevelAllows(LOG_LEVEL_ERROR, "[INFO] %s\n", message)
+	return printMessageIfLevelAllows(LOG_LEVEL_INFO, "[INFO] %s\n", message)
 }
 
 // A Sprintf-like method for an Info level message
@@ -80,7 +80,7 @@ func Infof(message string, arguments ...any) bool {
 
 // Logs a debug message (in case the current log level includes it)
 func Debug(message string) bool {
-	return printMessageIfLevelAllows(LOG_LEVEL_ERROR, "[DEBUG] %s\n", message)
+	return printMessageIfLevelAllows(LOG_LEVEL_DEBUG, "[DEBUG] %s\n", message)
 }
 
 // A Sprintf-like method for a Debug level message
