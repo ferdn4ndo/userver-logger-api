@@ -15,12 +15,12 @@ func TestGetContainerNameFromPath(test *testing.T) {
 
 	actualProducer := searchParams.Producer
 	if expectedProducer != actualProducer {
-		test.Fatalf(fmt.Sprintf("Failed asserting that the producer query string is '%s' (actual: '%s').", expectedProducer, actualProducer))
+		test.Fatalf("Failed asserting that the producer query string is '%s' (actual: '%s').", expectedProducer, actualProducer)
 	}
 
 	actualMessage := searchParams.Message
 	if expectedMessage != actualMessage {
-		test.Fatalf(fmt.Sprintf("Failed asserting that the producer query string is '%s' (actual: '%s').", expectedProducer, actualMessage))
+		test.Fatalf("Failed asserting that the producer query string is '%s' (actual: '%s').", expectedProducer, actualMessage)
 	}
 
 	test.Log("Finished testing the GetLogEntrySearchParams() method")

@@ -1,25 +1,24 @@
 package environment
 
 import (
-	"fmt"
 	"testing"
 )
 
 func checkEnvVarData(test *testing.T, envVar EnvVar, expectedKey string, expectedDescription string, expectedRequired bool, expectedDefaultValue string) {
 	if envVar.Key != expectedKey {
-		test.Errorf(fmt.Sprintf("Failed asserting that the attribute 'Key' has the value '%s' (got '%s' instead).", expectedKey, envVar.Key))
+		test.Errorf("Failed asserting that the attribute 'Key' has the value '%s' (got '%s' instead).", expectedKey, envVar.Key)
 	}
 
 	if envVar.Description != expectedDescription {
-		test.Errorf(fmt.Sprintf("Failed asserting that the attribute 'Description' has the value '%s' (got '%s' instead).", expectedDescription, envVar.Description))
+		test.Errorf("Failed asserting that the attribute 'Description' has the value '%s' (got '%s' instead).", expectedDescription, envVar.Description)
 	}
 
 	if envVar.Required != expectedRequired {
-		test.Errorf(fmt.Sprintf("Failed asserting that the attribute 'Required' has the value '%t' (got '%t' instead).", expectedRequired, envVar.Required))
+		test.Errorf("Failed asserting that the attribute 'Required' has the value '%t' (got '%t' instead).", expectedRequired, envVar.Required)
 	}
 
 	if envVar.DefaultValue != expectedDefaultValue {
-		test.Errorf(fmt.Sprintf("Failed asserting that the attribute 'DefaultValue' has the value '%s' (got '%s' instead).", expectedDefaultValue, envVar.DefaultValue))
+		test.Errorf("Failed asserting that the attribute 'DefaultValue' has the value '%s' (got '%s' instead).", expectedDefaultValue, envVar.DefaultValue)
 	}
 }
 
@@ -41,7 +40,7 @@ func TestEnvVarBasicAttributes(test *testing.T) {
 	checkEnvVarData(test, envVar, expectedKey, expectedDescription, expectedRequired, expectedDefaultValue)
 
 	if envVar.CurrentValue != expectedCurrentValue {
-		test.Errorf(fmt.Sprintf("Failed asserting that the attribute 'CurrentValue' has the value '%s' (got '%s' instead).", expectedCurrentValue, envVar.CurrentValue))
+		test.Errorf("Failed asserting that the attribute 'CurrentValue' has the value '%s' (got '%s' instead).", expectedCurrentValue, envVar.CurrentValue)
 	}
 
 	test.Log("Finished testing the ComputeFileChecksum() method")
@@ -58,7 +57,7 @@ func TestAddVariableToList(test *testing.T) {
 
 	totalVariables := len(list.Variables)
 	if totalVariables != 1 {
-		test.Errorf(fmt.Sprintf("Failed asserting that one varialbe was added to the list! (count: %d)", totalVariables))
+		test.Errorf("Failed asserting that one varialbe was added to the list! (count: %d)", totalVariables)
 	}
 
 	checkEnvVarData(test, list.Variables[0], expectedKey, expectedDescription, expectedRequired, expectedDefaultValue)

@@ -59,11 +59,13 @@ func (service ConsumedLinesFileService) UpdateLastConsumedLines() error {
 
 func (service ConsumedLinesFileService) GetLastConsumedFileDiff() (string, error) {
 	consumedFilePath := service.GetLastConsumedLinesFilePath()
+	logging.Debugf("Reading consumed log path '%s'", consumedFilePath)
 	if _, err := os.Stat(consumedFilePath); err != nil {
 		return "", err
 	}
 
-	cmd := exec.Command("comm", "-3", service.LogFilePath, consumedFilePath)
+	logging.Debugf("Comparing files '%s' and '%s'...", service.LogFilePath, consumedFilePath)
+	cmd := exec.Command("comm", "--nocheck-order", "-3", service.LogFilePath, consumedFilePath)
 	stdout, err := cmd.Output()
 	if err != nil {
 		return "", err

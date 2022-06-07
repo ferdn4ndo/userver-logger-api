@@ -1,7 +1,6 @@
 package file
 
 import (
-	"fmt"
 	"testing"
 
 	"github.com/ferdn4ndo/userver-logger-api/services/environment"
@@ -12,7 +11,7 @@ func TestGetTempFolder(test *testing.T) {
 	computedTempPath := GetTempFolder()
 
 	if expectedTempPath != computedTempPath {
-		test.Fatalf(fmt.Sprintf("Failed asserting that the computed temp path '%s' is equal to the expected '%s'.", computedTempPath, expectedTempPath))
+		test.Fatalf("Failed asserting that the computed temp path '%s' is equal to the expected '%s'.", computedTempPath, expectedTempPath)
 	}
 
 	test.Log("Finished testing the GetTempFolder() method")
@@ -23,7 +22,7 @@ func TestGetDataFolder(test *testing.T) {
 	computedTempPath := GetDataFolder()
 
 	if expectedTempPath != computedTempPath {
-		test.Fatalf(fmt.Sprintf("Failed asserting that the computed temp path '%s' is equal to the expected '%s'.", computedTempPath, expectedTempPath))
+		test.Fatalf("Failed asserting that the computed temp path '%s' is equal to the expected '%s'.", computedTempPath, expectedTempPath)
 	}
 
 	test.Log("Finished testing the GetDataFolder() method")
@@ -34,7 +33,7 @@ func TestFixtureFolder(test *testing.T) {
 	computedTempPath := GetFixtureFolder()
 
 	if expectedTempPath != computedTempPath {
-		test.Fatalf(fmt.Sprintf("Failed asserting that the computed temp path '%s' is equal to the expected '%s'.", computedTempPath, expectedTempPath))
+		test.Fatalf("Failed asserting that the computed temp path '%s' is equal to the expected '%s'.", computedTempPath, expectedTempPath)
 	}
 
 	test.Log("Finished testing the GetFixtureFolder() method")
@@ -45,7 +44,7 @@ func TestLogFilesFolder(test *testing.T) {
 	computedTempPath := GetLogFilesFolder()
 
 	if expectedTempPath != computedTempPath {
-		test.Fatalf(fmt.Sprintf("Failed asserting that the computed temp path '%s' is equal to the expected '%s'.", computedTempPath, expectedTempPath))
+		test.Fatalf("Failed asserting that the computed temp path '%s' is equal to the expected '%s'.", computedTempPath, expectedTempPath)
 	}
 
 	test.Log("Finished testing the GetLogFilesFolder() method")
@@ -57,7 +56,7 @@ func TestGetContainerNameFromPath(test *testing.T) {
 	computedName := GetContainerNameFromPath(filePath)
 
 	if expectedName != computedName {
-		test.Fatalf(fmt.Sprintf("Failed asserting that the computed container name '%s' is equal to the expected '%s'.", computedName, expectedName))
+		test.Fatalf("Failed asserting that the computed container name '%s' is equal to the expected '%s'.", computedName, expectedName)
 	}
 
 	test.Log("Finished testing the GetContainerNameFromPath() method")

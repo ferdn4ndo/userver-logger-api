@@ -12,7 +12,7 @@ func TestGetDatabaseFilePath(test *testing.T) {
 	computedDbPath := getDatabaseFilePath()
 
 	if expectedDbPath != computedDbPath {
-		test.Fatalf(fmt.Sprintf("Failed asserting that the computed DB path '%s' is equal to expected '%s'.", computedDbPath, expectedDbPath))
+		test.Fatalf("Failed asserting that the computed DB path '%s' is equal to expected '%s'.", computedDbPath, expectedDbPath)
 	}
 
 	test.Log("Finished testing the ComputeFileChecksum() method")
@@ -23,7 +23,7 @@ func TestGetEmptyFixtureFilePath(test *testing.T) {
 	computedFixturePath := getEmptyFixtureFilePath()
 
 	if expectedFixturePath != computedFixturePath {
-		test.Fatalf(fmt.Sprintf("Failed asserting that the computed DB empty fixture path '%s' is equal to expected '%s'.", computedFixturePath, expectedFixturePath))
+		test.Fatalf("Failed asserting that the computed DB empty fixture path '%s' is equal to expected '%s'.", computedFixturePath, expectedFixturePath)
 	}
 
 	test.Log("Finished testing the ComputeFileChecksum() method")
