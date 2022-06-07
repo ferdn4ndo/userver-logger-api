@@ -4,7 +4,7 @@
 [![Release](https://img.shields.io/github/v/release/ferdn4ndo/userver-logger-api)](https://github.com/ferdn4ndo/userver-logger-api/releases)
 [![Go Report Card](https://goreportcard.com/badge/github.com/ferdn4ndo/userver-logger-api)](https://goreportcard.com/report/github.com/ferdn4ndo/userver-logger-api)
 [![test status](https://github.com/ferdn4ndo/userver-logger-api/actions/workflows/run_tests.yml/badge.svg?branch=main)](https://github.com/ferdn4ndo/userver-logger-api/actions)
-[![codecov](https://codecov.io/gh/ferdn4ndo/userver-logger-api/branch/master/graph/badge.svg)](https://codecov.io/gh/ferdn4ndo/userver-logger-api)
+[![codecov](https://codecov.io/gh/ferdn4ndo/userver-logger-api/branch/main/graph/badge.svg?token=8756QC1248)](https://codecov.io/gh/ferdn4ndo/userver-logger-api)
 [![MIT license](https://img.shields.io/badge/license-MIT-brightgreen.svg)](https://opensource.org/licenses/MIT)
 
 <p align="center">
