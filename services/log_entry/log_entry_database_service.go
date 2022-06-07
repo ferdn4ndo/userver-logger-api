@@ -36,6 +36,8 @@ func (service LogEntryDatabaseService) GetAllLogEntries(request *http.Request, p
 	paginationService := &pagination.PaginationService{Request: request}
 	paginationService.ApplyQueryOffsetAndLimit(query)
 
+	query.Order("created_at desc")
+
 	listQuery := query.Find(&logEntries.LogEntries)
 	if listQuery.Error != nil {
 		return &logEntries, 0, listQuery.Error

@@ -8,11 +8,13 @@ import (
 	"github.com/ferdn4ndo/userver-logger-api/services/environment"
 )
 
-const LOG_LEVEL_NONE = 0
-const LOG_LEVEL_ERROR = 25
-const LOG_LEVEL_WARNING = 50
-const LOG_LEVEL_INFO = 75
-const LOG_LEVEL_DEBUG = 100
+const (
+	LOG_LEVEL_NONE    = 0
+	LOG_LEVEL_ERROR   = 25
+	LOG_LEVEL_WARNING = 50
+	LOG_LEVEL_INFO    = 75
+	LOG_LEVEL_DEBUG   = 100
+)
 
 // Retrieve the current log level based on the 'INTERNAL_LOG_LEVEL' env var
 func getCurrentLogLevel() int {
