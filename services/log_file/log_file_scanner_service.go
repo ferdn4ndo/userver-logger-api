@@ -53,6 +53,7 @@ func (service LogFileScannerService) CheckLogFile(filename string) {
 	logging.Debugf("SHA256 checksum for file '%s' has changed!", filename)
 	checksum.SetCachedFileChecksum(filename, computedFileChecksum)
 
+	logging.Debugf("Checking if update is required for filename '%s'", filename)
 	consumedFileService := &file.ConsumedLinesFileService{LogFilePath: filename}
 	if !consumedFileService.RequiresUpdate() {
 		logging.Debugf("No differences detected between current log file and the last consumed one, skipping...")
@@ -60,8 +61,7 @@ func (service LogFileScannerService) CheckLogFile(filename string) {
 		return
 	}
 
-	logging.Infof("Detected diff for last consumed lines on file '%s', updating...", filename)
-
+	logging.Infof("Detected diff for last consumed lines on file '%s', parsing...", filename)
 	diff, err := consumedFileService.GetLastConsumedFileDiff()
 	if err != nil {
 		logging.Errorf("Error getting last consumed file diff: %s", err)
@@ -73,9 +73,14 @@ func (service LogFileScannerService) CheckLogFile(filename string) {
 		LogEntryDbService: service.LogEntryDbService,
 	}
 
-	err = diffParserService.ParseDiff()
-	if err != nil {
+	logging.Debugf("Parsing file diff...")
+	if err := diffParserService.ParseDiff(); err != nil {
 		logging.Errorf("Error parsing diff: %s", err)
+	}
+
+	logging.Debugf("Updating last consumed file...")
+	if err := consumedFileService.UpdateLastConsumedLines(); err != nil {
+		logging.Errorf("Error updating last consumed file: %s", err)
 	}
 }
 
