@@ -2,12 +2,12 @@ name: Run The Test Suite
 
 on:
   push:
-    branches: 
+    branches:
       - master
       - main
-    paths-ignore: 
+    paths-ignore:
       - '**.md'
-    tags-ignore: 
+    tags-ignore:
       - '**'
   pull_request:
     paths-ignore:
@@ -20,12 +20,12 @@ jobs: # Docs: <https://git.io/JvxXE>
     steps:
       - name: Check out code
         uses: actions/checkout@v3
-        with: 
+        with:
           fetch-depth: 0
 
       - name: Check for GitLeaks
         uses: zricethezav/gitleaks-action@v1.6.0 # Action page: <https://github.com/zricethezav/gitleaks-action>
-  
+
   check-codebase-quality:
     name: Check codebase quality
     runs-on: ubuntu-20.04
@@ -67,12 +67,23 @@ jobs: # Docs: <https://git.io/JvxXE>
           path: ./docker-image.tar
           retention-days: 1
 
-  scan-image:
-    name: Scan docker image
+  scan-image-healthcheck-and-uts:
+    name: Scan image, health check and UTs
     runs-on: ubuntu-20.04
-    needs: 
+    needs:
       - build-image
+    env:
+      CONTAINER_NAME: userver-logger-api
+      AUTH_USERNAME: test
+      AUTH_PASSWORD: test
+      DATA_FOLDER: /home/runner/work/userver-logger-api/userver-logger-api/data
+      LOG_FILES_FOLDER: /home/runner/work/userver-logger-api/userver-logger-api/data
+      FIXTURE_FOLDER: /home/runner/work/userver-logger-api/userver-logger-api/fixture
+      CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
     steps:
+      - name: Check out code
+        uses: actions/checkout@v3
+
       - name: Download built docker image
         uses: actions/download-artifact@v3
         with:
@@ -90,41 +101,36 @@ jobs: # Docs: <https://git.io/JvxXE>
           fail-build: true
           severity-cutoff: low # negligible, low, medium, high or critical
 
-  run-image-healthcheck-and-uts:
-    name: Run image, call /health and execute UTs
-    runs-on: ubuntu-20.04
-    needs: [build-image]
-    env:
-      CONTAINER_NAME: userver-logger-api
-      AUTH_USERNAME: test
-      AUTH_PASSWORD: test
-      DATA_DIR: /home/runner/work/userver-logger-api/userver-logger-api/data
-      LOG_FILES_DIR: /home/runner/work/userver-logger-api/userver-logger-api/data
-    steps:
-      - name: Download built docker image
-        uses: actions/download-artifact@v3
-        with:
-          name: test-docker-image
-          path: .artifact
-
-      - name: Prepare image to run
-        working-directory: .artifact
-        run: docker load < docker-image.tar
-
       - name: Creating directories
-        run: mkdir -p "$LOG_FILES_DIR"
+        run: mkdir -p "$LOG_FILES_FOLDER"
 
       - name: Copying sample log file
-        run: curl -sL https://raw.githubusercontent.com/ferdn4ndo/userver-logger-api/main/fixture/sample-app.log > "$LOG_FILES_DIR/sample-app.log"
+        run: curl -sL https://raw.githubusercontent.com/ferdn4ndo/userver-logger-api/main/fixture/sample-app.log > "$LOG_FILES_FOLDER/sample-app.log"
 
       - name: Try to run container
-        run: docker run -d --rm -p 5000:5000 -v "$LOG_FILES_DIR":/log_files --env BASIC_AUTH_USERNAME="$AUTH_USERNAME" --env BASIC_AUTH_PASSWORD="$AUTH_PASSWORD" --name "$CONTAINER_NAME" "$CONTAINER_NAME":local
+        run: docker run -d --rm -p 5555:5555 -v "$LOG_FILES_FOLDER":/log_files --env BASIC_AUTH_USERNAME="$AUTH_USERNAME" --env BASIC_AUTH_PASSWORD="$AUTH_PASSWORD" --env DATA_FOLDER="$DATA_FOLDER" --name "$CONTAINER_NAME" "$CONTAINER_NAME":local
 
       - name: Wait for healthy status
         run: while [ "`docker inspect -f {{.State.Health.Status}} $CONTAINER_NAME`" != "healthy" ]; do sleep 5; done
 
       - name: Execute test call
-        run: curl http://localhost:5000/health
+        run: curl http://localhost:5555/health
 
-      - name: Run UTs
-        run: docker exec -i "$CONTAINER_NAME" sh -c "./scripts/run_all_tests.sh"
+      - name: Run UTs with coverage check
+        run: docker exec -i "$CONTAINER_NAME" sh -c "./scripts/run_all_tests_with_coverage.sh"
+
+      - name: Copy coverage report file
+        run: docker cp "$CONTAINER_NAME":"$DATA_FOLDER/coverage.txt" ./coverage.txt
+
+      - name: View report
+        run: cat ./coverage.txt
+
+      - name: Upload coverage report
+        uses: codecov/codecov-action@v2
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          files: ./coverage.txt
+          flags: unittests
+          name: codecov-userver-logger-api
+          fail_ci_if_error: true
+          verbose: true

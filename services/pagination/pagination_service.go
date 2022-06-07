@@ -25,13 +25,28 @@ func (logEntry *PaginatedResponse) Render(writer http.ResponseWriter, request *h
 	return nil
 }
 
-func GetRequestOffsetAndLimit(request *http.Request) (int, int) {
-	offset, err := strconv.Atoi(request.URL.Query().Get("offset"))
+type PaginationServiceInterface interface {
+	GetRequestOffsetAndLimit() (int, int)
+	ApplyQueryOffsetAndLimit(query QueryOffsetAndLimit)
+	PreparePaginatedResponse(items []render.Renderer, totalCount int) PaginatedResponse
+}
+
+type QueryOffsetAndLimit interface {
+	Offset(offset int) *gorm.DB
+	Limit(limit int) *gorm.DB
+}
+
+type PaginationService struct {
+	Request *http.Request
+}
+
+func (service PaginationService) GetRequestOffsetAndLimit() (int, int) {
+	offset, err := strconv.Atoi(service.Request.URL.Query().Get("offset"))
 	if err != nil {
 		offset = 0
 	}
 
-	limit, err := strconv.Atoi(request.URL.Query().Get("limit"))
+	limit, err := strconv.Atoi(service.Request.URL.Query().Get("limit"))
 	if err != nil {
 		limit = PAGINATION_DEFAULT_LIMIT
 	}
@@ -39,7 +54,9 @@ func GetRequestOffsetAndLimit(request *http.Request) (int, int) {
 	return offset, limit
 }
 
-func ApplyQueryOffsetAndLimit(query *gorm.DB, offset int, limit int) *gorm.DB {
+func (service PaginationService) ApplyQueryOffsetAndLimit(query QueryOffsetAndLimit) {
+	offset, limit := service.GetRequestOffsetAndLimit()
+
 	if offset < 0 {
 		offset = 0
 	}
@@ -50,12 +67,13 @@ func ApplyQueryOffsetAndLimit(query *gorm.DB, offset int, limit int) *gorm.DB {
 		limit = PAGINATION_MAX_LIMIT
 	}
 
-	query.Offset(offset).Limit(limit)
-
-	return query
+	query.Offset(offset)
+	query.Limit(limit)
 }
 
-func PreparePaginatedResponse(items []render.Renderer, offset int, limit int, totalCount int) PaginatedResponse {
+func (service PaginationService) PreparePaginatedResponse(items []render.Renderer, totalCount int) PaginatedResponse {
+	offset, limit := service.GetRequestOffsetAndLimit()
+
 	nextPageOffset := computeNextPageOffset(offset, limit, totalCount)
 	previousPageOffset := computePreviousPageOffset(offset, limit)
 

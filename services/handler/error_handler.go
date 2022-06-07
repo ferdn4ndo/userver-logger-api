@@ -1,10 +1,10 @@
 package handler
 
 import (
-	"encoding/json"
-	"log"
+	"fmt"
 	"net/http"
 
+	"github.com/ferdn4ndo/userver-logger-api/services/logging"
 	"github.com/go-chi/render"
 )
 
@@ -40,46 +40,43 @@ var (
 func (errorResponse *ErrorResponse) Render(writer http.ResponseWriter, request *http.Request) error {
 	render.Status(request, errorResponse.StatusCode)
 
-	json.NewEncoder(writer).Encode(errorResponse)
-
 	return nil
 }
+
+const BadRequestStatusText = "There was a bad request."
 
 func ErrorRenderer(err error) *ErrorResponse {
 	return &ErrorResponse{
 		Err:        err,
 		StatusCode: 400,
-		StatusText: "There was a bad request.",
+		StatusText: BadRequestStatusText,
 		Message:    err.Error(),
 	}
 }
+
+const InternalServerErrorStatusText = "An internal server error has occurred."
 
 func ServerErrorRenderer(err error) *ErrorResponse {
 	return &ErrorResponse{
 		Err:        err,
 		StatusCode: 500,
-		StatusText: "An internal server error has occurred.",
+		StatusText: InternalServerErrorStatusText,
 		Message:    err.Error(),
 	}
 }
 
-func AddCustomErrorHandlerfunc(writer http.ResponseWriter, request *http.Request, value interface{}) {
-	if err, ok := value.(error); ok {
-
-		// We set a default error status response code if one hasn't been set.
-		if _, ok := request.Context().Value(render.StatusCtxKey).(int); !ok {
-			writer.WriteHeader(400)
-		}
-
-		// We log the error
-		log.Printf("Logging err: %s\n", err.Error())
-
-		// We change the response to not reveal the actual error message,
-		// instead we can transform the message something more friendly or mapped
-		// to some code / language, etc.
-		render.DefaultResponder(writer, request, render.M{"status": "error"})
-		return
+func ServerErrorMsgRenderer(message string) *ErrorResponse {
+	return &ErrorResponse{
+		Err:        fmt.Errorf(message),
+		StatusCode: 500,
+		StatusText: InternalServerErrorStatusText,
+		Message:    message,
 	}
+}
 
-	render.DefaultResponder(writer, request, value)
+func RenderError(writer http.ResponseWriter, request *http.Request, renderer render.Renderer) {
+	err := render.Render(writer, request, renderer)
+	if err != nil {
+		logging.Errorf("Error rendering internal error: %s", err)
+	}
 }

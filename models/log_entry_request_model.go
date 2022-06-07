@@ -22,15 +22,15 @@ type LogEntryRequest struct {
 
 func (logEntryRequest *LogEntryRequest) Bind(request *http.Request) error {
 	if logEntryRequest.Producer == "" {
-		return fmt.Errorf("The field 'producer' is required.")
+		return fmt.Errorf("the field 'producer' is required")
 	}
 
 	if logEntryRequest.Message == "" {
-		return fmt.Errorf("The field 'message' is required.")
+		return fmt.Errorf("the field 'message' is required")
 	}
 
 	// just a post-process after a decode..
 	logEntryRequest.ProtectedID = "" // unset the protected ID
-	//a.Article.Title = strings.ToLower(a.Article.Title) // as an example, we down-case
+
 	return nil
 }

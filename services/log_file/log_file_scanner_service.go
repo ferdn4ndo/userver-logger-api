@@ -2,45 +2,80 @@ package log_file
 
 import (
 	"io/fs"
-	"log"
 	"path/filepath"
 	"strings"
 	"time"
 
 	"github.com/ferdn4ndo/userver-logger-api/services/checksum"
 	"github.com/ferdn4ndo/userver-logger-api/services/file"
+	"github.com/ferdn4ndo/userver-logger-api/services/log_entry"
+	"github.com/ferdn4ndo/userver-logger-api/services/logging"
 )
 
-func ForeverScanLogFiles() {
-	log.Printf("Starting scanning log files forever...")
-	for true {
-		ScanLogFiles()
+type LogFileScannerService struct {
+	LogEntryDbService log_entry.LogEntryDatabaseService
+}
+
+func (service LogFileScannerService) ForeverScanLogFiles() {
+	logFileScannerService := &LogFileScannerService{LogEntryDbService: service.LogEntryDbService}
+
+	logging.Debug("Scanning log files forever...")
+	for {
+		logFileScannerService.ScanLogFiles()
 		time.Sleep(time.Second * 5)
 	}
 }
 
-func ScanLogFiles() {
+func (service LogFileScannerService) ScanLogFiles() {
 	logsFolderPath := file.GetLogFilesFolder()
 	logFiles := findLogFiles(logsFolderPath, ".log")
 
 	for _, file := range logFiles {
-		CheckLogFile(file)
+		service.CheckLogFile(file)
 	}
 }
 
-func CheckLogFile(filename string) {
+func (service LogFileScannerService) CheckLogFile(filename string) {
 	cachedFileChecksum := checksum.GetCachedFileChecksum(filename)
 
 	computedFileChecksum, err := checksum.ComputeFileChecksum(filename)
 	if err != nil {
-		log.Panicf("Error checking log file '%s': %s", filename, err)
+		logging.Errorf("Error checking log file '%s': %s", filename, err)
 	}
 
-	needsUpdate := cachedFileChecksum == "" || cachedFileChecksum != computedFileChecksum
-	if needsUpdate {
-		log.Printf("File '%s' was updated, computing SHA256 hash and parsing lines...", filename)
-		checksum.SetCachedFileChecksum(filename, computedFileChecksum)
-		ParseLogFile(filename)
+	needsChecksumUpdate := cachedFileChecksum == "" || cachedFileChecksum != computedFileChecksum
+	if !needsChecksumUpdate {
+		logging.Debugf("File '%s' SHA256 was not updated, skipping...", filename)
+
+		return
+	}
+
+	logging.Debugf("SHA256 checksum for file '%s' has changed!", filename)
+	checksum.SetCachedFileChecksum(filename, computedFileChecksum)
+
+	consumedFileService := &file.ConsumedLinesFileService{LogFilePath: filename}
+	if !consumedFileService.RequiresUpdate() {
+		logging.Debugf("No differences detected between current log file and the last consumed one, skipping...")
+
+		return
+	}
+
+	logging.Infof("Detected diff for last consumed lines on file '%s', updating...", filename)
+
+	diff, err := consumedFileService.GetLastConsumedFileDiff()
+	if err != nil {
+		logging.Errorf("Error getting last consumed file diff: %s", err)
+	}
+
+	diffParserService := &LogDiffParserService{
+		Producer:          consumedFileService.GetProducer(),
+		Diff:              diff,
+		LogEntryDbService: service.LogEntryDbService,
+	}
+
+	err = diffParserService.ParseDiff()
+	if err != nil {
+		logging.Errorf("Error parsing diff: %s", err)
 	}
 }
 
@@ -49,10 +84,10 @@ func findLogFiles(root, ext string) []string {
 
 	err := filepath.WalkDir(root, func(filename string, fileEntry fs.DirEntry, e error) error {
 		if e != nil {
-			log.Panicf("Error reading log file '%s' inside folder '%s': %s", filename, root, e)
+			logging.Errorf("Error reading log file '%s' inside folder '%s': %s", filename, root, e)
 		}
 
-		if strings.ToLower(filepath.Ext(fileEntry.Name())) == strings.ToLower(ext) {
+		if strings.EqualFold(filepath.Ext(fileEntry.Name()), ext) {
 			filesList = append(filesList, filename)
 		}
 
@@ -60,7 +95,7 @@ func findLogFiles(root, ext string) []string {
 	})
 
 	if err != nil {
-		log.Panicf("Error finding log files inside folder '%s': %s", root, err)
+		logging.Errorf("Error finding log files inside folder '%s': %s", root, err)
 	}
 
 	return filesList

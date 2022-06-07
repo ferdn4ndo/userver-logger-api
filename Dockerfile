@@ -5,7 +5,7 @@ LABEL maintaner="Fernando Constantino <const.fernando@gmail.com>"
 # Install GCC + git + SSL ca certificates
 # GCC is required to build the sqlite3 dependency
 # Git is required for fetching the dependencies
-RUN apk update && apk add git gcc musl-dev curl sqlite && rm -rf /var/cache/apk/*
+RUN apk update && apk add git gcc musl-dev curl sqlite coreutils && rm -rf /var/cache/apk/*
 
 # Create appuser
 ENV USER=appuser
@@ -34,8 +34,8 @@ RUN GOOS=linux GOARCH=amd64 go build \
     -o /go/bin/server . \
     && chmod +x /go/bin/server
 
-EXPOSE 5000
+EXPOSE 5555
 
-HEALTHCHECK --interval=30s --timeout=10s --retries=6 --start-period=5s CMD curl -s -f http://localhost:5000/health
+HEALTHCHECK --interval=30s --timeout=10s --retries=6 --start-period=5s CMD curl -s -f http://localhost:5555/health
 
 ENTRYPOINT ["/go/bin/server"]

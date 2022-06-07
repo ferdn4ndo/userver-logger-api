@@ -3,14 +3,14 @@ package handler
 import (
 	"encoding/json"
 	"fmt"
-	"log"
 	"net/http"
 
-	"github.com/go-chi/chi"
+	"github.com/ferdn4ndo/userver-logger-api/services/logging"
+	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/render"
 )
 
-func NewHandler() http.Handler {
+func NewHandler() *chi.Mux {
 	router := chi.NewRouter()
 	router.MethodNotAllowed(methodNotAllowedHandler)
 	router.NotFound(notFoundHandler)
@@ -25,7 +25,7 @@ func UnauthorizedHandler(writer http.ResponseWriter) {
 
 	err := json.NewEncoder(writer).Encode(ErrUnauthorized)
 	if err != nil {
-		log.Fatal(fmt.Sprintf("Error encoding json object: %s", err))
+		logging.Errorf("Error encoding json object: %s", err)
 		writer.WriteHeader(http.StatusInternalServerError)
 		fmt.Fprintf(writer, "An internal error occurred while encoding the json object!")
 		return
@@ -40,6 +40,11 @@ func methodNotAllowedHandler(writer http.ResponseWriter, request *http.Request) 
 
 func notFoundHandler(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-type", "application/json")
-	w.WriteHeader(400)
+	w.WriteHeader(404)
 	render.Render(w, r, ErrNotFound)
+}
+
+type ControllerHandler struct {
+	Writer  http.ResponseWriter
+	Request *http.Request
 }
