@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"net/http"
 
+	"github.com/ferdn4ndo/userver-logger-api/services/logging"
 	"github.com/go-chi/render"
 )
 
@@ -70,5 +71,12 @@ func ServerErrorMsgRenderer(message string) *ErrorResponse {
 		StatusCode: 500,
 		StatusText: InternalServerErrorStatusText,
 		Message:    message,
+	}
+}
+
+func RenderError(writer http.ResponseWriter, request *http.Request, renderer render.Renderer) {
+	err := render.Render(writer, request, renderer)
+	if err != nil {
+		logging.Errorf("Error rendering internal error: %s", err)
 	}
 }

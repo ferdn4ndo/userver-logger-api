@@ -30,14 +30,14 @@ func (controller LogEntrySingleController) Context(next http.Handler) http.Handl
 	return http.HandlerFunc(func(writer http.ResponseWriter, request *http.Request) {
 		logEntryId := chi.URLParam(request, "logEntryId")
 		if logEntryId == "" {
-			render.Render(writer, request, handler.ServerErrorMsgRenderer("log entry ID is required"))
+			handler.RenderError(writer, request, handler.ServerErrorMsgRenderer("log entry ID is required"))
 
 			return
 		}
 
 		id, err := strconv.Atoi(logEntryId)
 		if err != nil {
-			render.Render(writer, request, handler.ServerErrorMsgRenderer("invalid log entry ID"))
+			handler.RenderError(writer, request, handler.ServerErrorMsgRenderer("invalid log entry ID"))
 
 			return
 		}
@@ -46,20 +46,20 @@ func (controller LogEntrySingleController) Context(next http.Handler) http.Handl
 
 		logEntryExists, err := logEntryDbService.CheckIfIdExists(uint(id))
 		if err != nil {
-			render.Render(writer, request, handler.ServerErrorMsgRenderer("could not determine if log entry ID exists"))
+			handler.RenderError(writer, request, handler.ServerErrorMsgRenderer("could not determine if log entry ID exists"))
 
 			return
 		}
 
 		if !logEntryExists {
-			render.Render(writer, request, handler.ErrNotFound)
+			handler.RenderError(writer, request, handler.ErrNotFound)
 
 			return
 		}
 
 		logEntryPointer, err := logEntryDbService.GetLogEntryById(uint(id))
 		if err != nil {
-			render.Render(writer, request, handler.ErrorRenderer(err))
+			handler.RenderError(writer, request, handler.ErrorRenderer(err))
 
 			return
 		}
@@ -77,7 +77,7 @@ func (controller LogEntrySingleController) Get(writer http.ResponseWriter, reque
 	logEntryResponseService := log_entry.LogEntryResponseService{}
 	error := render.Render(writer, request, logEntryResponseService.NewLogEntryResponse(logEntryPointer))
 	if error != nil {
-		render.Render(writer, request, handler.ServerErrorRenderer(error))
+		handler.RenderError(writer, request, handler.ServerErrorRenderer(error))
 
 		return
 	}
@@ -89,7 +89,7 @@ func (controller LogEntrySingleController) Put(writer http.ResponseWriter, reque
 	logEntryRequest := &models.LogEntryRequest{}
 
 	if error := render.Bind(request, logEntryRequest); error != nil {
-		render.Render(writer, request, handler.ErrBadRequest)
+		handler.RenderError(writer, request, handler.ErrBadRequest)
 
 		return
 	}
@@ -97,7 +97,7 @@ func (controller LogEntrySingleController) Put(writer http.ResponseWriter, reque
 	logEntryDbService := log_entry.LogEntryDatabaseService{DbService: controller.DbService}
 	updatedLogEntryPointer, error := logEntryDbService.UpdateLogEntry((*logEntryPointer).ID, logEntryRequest)
 	if error != nil {
-		render.Render(writer, request, handler.ServerErrorRenderer(error))
+		handler.RenderError(writer, request, handler.ServerErrorRenderer(error))
 
 		return
 	}
@@ -105,7 +105,7 @@ func (controller LogEntrySingleController) Put(writer http.ResponseWriter, reque
 	logEntryResponseService := log_entry.LogEntryResponseService{}
 	error = render.Render(writer, request, logEntryResponseService.NewLogEntryResponse(updatedLogEntryPointer))
 	if error != nil {
-		render.Render(writer, request, handler.ServerErrorRenderer(error))
+		handler.RenderError(writer, request, handler.ServerErrorRenderer(error))
 
 		return
 	}
@@ -118,7 +118,7 @@ func (controller LogEntrySingleController) Delete(writer http.ResponseWriter, re
 	logEntryDbService := log_entry.LogEntryDatabaseService{DbService: controller.DbService}
 	error := logEntryDbService.DeleteLogEntry(logEntry.ID)
 	if error != nil {
-		render.Render(writer, request, handler.ServerErrorRenderer(error))
+		handler.RenderError(writer, request, handler.ServerErrorRenderer(error))
 
 		return
 	}

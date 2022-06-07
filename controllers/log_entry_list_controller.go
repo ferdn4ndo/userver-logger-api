@@ -25,7 +25,7 @@ func (controller LogEntryListController) Get(writer http.ResponseWriter, request
 
 	logEntryListPointer, totalResults, error := logEntryDbService.GetAllLogEntries(request, searchParams)
 	if error != nil {
-		render.Render(writer, request, handler.ServerErrorRenderer(error))
+		handler.RenderError(writer, request, handler.ServerErrorRenderer(error))
 
 		return
 	}
@@ -33,7 +33,7 @@ func (controller LogEntryListController) Get(writer http.ResponseWriter, request
 	logEntryResponseService := log_entry.LogEntryResponseService{PaginationService: paginationService}
 	error = render.Render(writer, request, logEntryResponseService.NewLogEntryListResponse(logEntryListPointer, offset, limit, totalResults))
 	if error != nil {
-		render.Render(writer, request, handler.ErrorRenderer(error))
+		handler.RenderError(writer, request, handler.ErrorRenderer(error))
 	}
 }
 
@@ -42,14 +42,14 @@ func (controller LogEntryListController) Post(writer http.ResponseWriter, reques
 	logEntryRequest := &models.LogEntryRequest{}
 
 	if error := render.Bind(request, logEntryRequest); error != nil {
-		render.Render(writer, request, handler.ErrBadRequest)
+		handler.RenderError(writer, request, handler.ErrBadRequest)
 
 		return
 	}
 
 	logEntryDbService := log_entry.LogEntryDatabaseService{DbService: controller.DbService}
 	if error := logEntryDbService.AddLogEntry(logEntryRequest.LogEntry); error != nil {
-		render.Render(writer, request, handler.ErrorRenderer(error))
+		handler.RenderError(writer, request, handler.ErrorRenderer(error))
 
 		return
 	}
@@ -58,7 +58,7 @@ func (controller LogEntryListController) Post(writer http.ResponseWriter, reques
 	render.Status(request, http.StatusCreated)
 	error := render.Render(writer, request, logEntryResponseService.NewLogEntryResponse(logEntryRequest.LogEntry))
 	if error != nil {
-		render.Render(writer, request, handler.ServerErrorRenderer(error))
+		handler.RenderError(writer, request, handler.ServerErrorRenderer(error))
 
 		return
 	}

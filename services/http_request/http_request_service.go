@@ -40,5 +40,5 @@ func (httpRequest MockedHttpResponseWriter) Header() http.Header {
 }
 
 func (httpRequest MockedHttpResponseWriter) WriteHeader(statusCode int) {
-	httpRequest.status = statusCode
+	logging.Debugf("Set status code: %d", statusCode)
 }

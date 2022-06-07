@@ -4,6 +4,7 @@ import (
 	"net/http"
 
 	"github.com/ferdn4ndo/userver-logger-api/services/database"
+	"github.com/ferdn4ndo/userver-logger-api/services/logging"
 )
 
 const HEALTH_STATUS_OK string = "OK"
@@ -23,7 +24,10 @@ type HealthService struct {
 }
 
 func (service HealthService) GetHealthData() *HealthData {
-	service.DbService.AddHeartbeatLog()
+	err := service.DbService.AddHeartbeatLog()
+	if err != nil {
+		logging.Errorf("Error adding heartbeat entry: %s", err)
+	}
 
 	data := &HealthData{
 		Status:          HEALTH_STATUS_OK,

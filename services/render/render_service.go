@@ -44,5 +44,7 @@ func (service MockedRenderService) Render(writer http.ResponseWriter, request *h
 	}
 
 	fmt.Print(string(bytes))
-	data.Render(writer, request)
+	if err := data.Render(writer, request); err != nil {
+		logging.Errorf("Error rendering: %s", err)
+	}
 }
