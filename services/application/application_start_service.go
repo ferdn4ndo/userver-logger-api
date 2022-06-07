@@ -1,11 +1,10 @@
 package application
 
 import (
-	"log"
-
 	"github.com/ferdn4ndo/userver-logger-api/services/database"
 	"github.com/ferdn4ndo/userver-logger-api/services/log_entry"
 	"github.com/ferdn4ndo/userver-logger-api/services/log_file"
+	"github.com/ferdn4ndo/userver-logger-api/services/logging"
 	"github.com/ferdn4ndo/userver-logger-api/services/router"
 )
 
@@ -15,7 +14,7 @@ type ApplicationStartService struct {
 }
 
 func (service ApplicationStartService) StartApplication() {
-	log.Println("Initializing uServer Logger")
+	logging.Info("Initializing uServer Logger API...")
 
 	dbService := service.StartDatabase()
 

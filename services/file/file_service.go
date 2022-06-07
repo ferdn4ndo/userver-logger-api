@@ -1,19 +1,19 @@
 package file
 
 import (
-	"log"
 	"os"
 	"path/filepath"
 	"strings"
 
 	"github.com/ferdn4ndo/userver-logger-api/services/environment"
+	"github.com/ferdn4ndo/userver-logger-api/services/logging"
 )
 
 func createFolderIfNotExists(folderPath string) {
 	// If path is already a directory, MkdirAll does nothing and returns nil.
 	err := os.MkdirAll(folderPath, 0755)
 	if err != nil {
-		log.Panicf("Error while creating folder at '%s': %s", folderPath, err)
+		logging.Errorf("Error while creating folder at '%s': %s", folderPath, err)
 	}
 }
 

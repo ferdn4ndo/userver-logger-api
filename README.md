@@ -36,6 +36,12 @@ Then edit the file to tweak the settings as you wish before running the containe
 * **LETSENCRYPT_EMAIL**: The hostmaster e-mail to use in the SSL certificate generation by [Let's Encrypt](https://letsencrypt.org/) if you're running the container behind a reverse proxy. (Default: `[EMPTY]`)
 * **BASIC_AUTH_USERNAME**: The username to use in the Basic Authentication of the API endpoints. (Default: `[EMPTY]`) **[REQUIRED]**
 * **BASIC_AUTH_PASSWORD**: The password to use in the Basic Authentication of the API endpoints. (Default: `[EMPTY]`) **[REQUIRED]**
+* **INTERNAL_LOG_LEVEL**: The minimum log level to be printed on stdout (for internal API workflows, not for the monitored containers/log files). (Default: `75`)
+  * NONE = 0;
+  * ERROR = 25;
+  * WARNING = 50;
+  * INFO = 75;
+  * DEBUG = 100;
 * **LOG_FILES_FOLDER**: The location of the log files to be watched. (Default: `/log_files`)
 * **TMP_FOLDER**: The location of the temporary files created while running the service. (Default: `/go/src/github.com/ferdn4ndo/userver-logger-api/tmp`)
 * **DATA_FOLDER**: The location of the temporary files created while running the service. (Default: `/go/src/github.com/ferdn4ndo/userver-logger-api/data`)

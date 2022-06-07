@@ -11,6 +11,7 @@ import (
 	"syscall"
 	"time"
 
+	"github.com/ferdn4ndo/userver-logger-api/services/logging"
 	"github.com/go-chi/chi/v5"
 )
 
@@ -32,13 +33,13 @@ func (app *Application) Start() {
 		WriteTimeout: 30 * time.Second,
 	}
 
-	log.Printf("Opening server port %s", app.Server.Addr)
+	logging.Debugf("Opening server port %s", app.Server.Addr)
 	listener, error := net.Listen("tcp", app.Server.Addr)
 	if error != nil {
 		log.Fatalf("Error occurred when opening '%s': %s", app.Server.Addr, error.Error())
 	}
 
-	log.Printf("Listening connections...")
+	logging.Infof("API startup completed. Listening connections on %s", app.Server.Addr)
 	go func() {
 		app.Server.Serve(listener)
 	}()
@@ -46,8 +47,8 @@ func (app *Application) Start() {
 
 	channel := make(chan os.Signal, 1)
 	signal.Notify(channel, syscall.SIGINT, syscall.SIGTERM)
-	log.Println(fmt.Sprint(<-channel))
-	log.Println("Stopping API server.")
+	logging.Info(fmt.Sprint(<-channel))
+	logging.Info("Stopping API server.")
 }
 
 func (app *Application) Stop() {
@@ -55,7 +56,7 @@ func (app *Application) Stop() {
 	defer cancel()
 
 	if error := app.Server.Shutdown(context); error != nil {
-		log.Printf("Could not shut down server correctly: %v\n", error)
+		logging.Errorf("Could not shut down server correctly: %v", error)
 		os.Exit(1)
 	}
 }

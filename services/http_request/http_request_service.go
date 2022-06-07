@@ -2,8 +2,9 @@ package http_request
 
 import (
 	"fmt"
-	"log"
 	"net/http"
+
+	"github.com/ferdn4ndo/userver-logger-api/services/logging"
 )
 
 type MockedReadCloser struct{}
@@ -31,7 +32,7 @@ func (httpRequest MockedHttpResponseWriter) Write(data []byte) (int, error) {
 }
 
 func (httpRequest MockedHttpResponseWriter) Header() http.Header {
-	log.Printf("Mock RealResponseWriter Header")
+	logging.Debug("Mock RealResponseWriter Header")
 
 	var headers map[string][]string
 

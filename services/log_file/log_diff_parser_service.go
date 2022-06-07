@@ -2,11 +2,12 @@ package log_file
 
 import (
 	"bufio"
-	"log"
+	"fmt"
 	"strings"
 
 	"github.com/ferdn4ndo/userver-logger-api/models"
 	"github.com/ferdn4ndo/userver-logger-api/services/log_entry"
+	"github.com/ferdn4ndo/userver-logger-api/services/logging"
 )
 
 type LogDiffParserService struct {
@@ -23,7 +24,7 @@ func (service LogDiffParserService) ParseDiff() error {
 	}
 
 	if err := scanner.Err(); err != nil {
-		log.Fatalf("Error scanning string: %s", err)
+		logging.Errorf("Error scanning string: %s", err)
 	}
 
 	return nil
@@ -32,7 +33,7 @@ func (service LogDiffParserService) ParseDiff() error {
 func (service LogDiffParserService) parseLogFileLine(line string) {
 	logEntryExists, err := service.LogEntryDbService.CheckIfLogEntryExists(service.Producer, line)
 	if err != nil {
-		log.Fatalf("Error checking if log entry exists: %s", err)
+		logging.Error(fmt.Sprintf("Error checking if log entry exists: %s", err))
 	}
 
 	if !logEntryExists {
@@ -42,9 +43,9 @@ func (service LogDiffParserService) parseLogFileLine(line string) {
 		}
 
 		if err := service.LogEntryDbService.AddLogEntry(model); err != nil {
-			log.Fatalf("Error adding parsed log line entry: %s", err)
+			logging.Errorf("Error adding parsed log line entry: %s", err)
 		}
 	} else {
-		log.Printf("Skipping duplicate line: %s", line)
+		logging.Debug(fmt.Sprintf("Skipping duplicate line: %s", line))
 	}
 }

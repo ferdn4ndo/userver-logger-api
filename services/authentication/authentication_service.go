@@ -3,11 +3,11 @@ package authentication
 import (
 	"crypto/sha256"
 	"crypto/subtle"
-	"log"
 	"net/http"
 
 	"github.com/ferdn4ndo/userver-logger-api/services/environment"
 	"github.com/ferdn4ndo/userver-logger-api/services/handler"
+	"github.com/ferdn4ndo/userver-logger-api/services/logging"
 )
 
 func BasicAuthHandler(next http.Handler) http.Handler {
@@ -26,6 +26,8 @@ func BasicAuthHandler(next http.Handler) http.Handler {
 			if credentialsAreValid {
 				next.ServeHTTP(writer, request)
 				return
+			} else {
+				logging.Debugf("Invalid credentials: {username: %s, password: %s}", username, password)
 			}
 		}
 
@@ -64,7 +66,7 @@ func getAuthUsername() string {
 	username := environment.GetEnvKey("BASIC_AUTH_USERNAME")
 
 	if username == "" {
-		log.Fatal("Unable to determine the basic authentication username!")
+		logging.Error("Unable to determine the basic authentication username!")
 	}
 
 	return username
@@ -74,7 +76,7 @@ func getAuthPassword() string {
 	password := environment.GetEnvKey("BASIC_AUTH_PASSWORD")
 
 	if password == "" {
-		log.Fatal("Unable to determine the basic authentication password!")
+		logging.Error("Unable to determine the basic authentication password!")
 	}
 
 	return password

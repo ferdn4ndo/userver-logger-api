@@ -3,9 +3,10 @@ package file
 import (
 	"errors"
 	"fmt"
-	"log"
 	"os"
 	"os/exec"
+
+	"github.com/ferdn4ndo/userver-logger-api/services/logging"
 )
 
 type ConsumedLinesFileServiceInterface interface {
@@ -19,7 +20,9 @@ type ConsumedLinesFileService struct {
 
 func (service ConsumedLinesFileService) GetProducer() string {
 	if service.LogFilePath == "" {
-		log.Fatal("Unable to start the service without a log file path (LogFilePath is empty).")
+		logging.Errorf("Unable to start the service without a log file path (LogFilePath is empty).")
+
+		return "<unknown>"
 	}
 
 	return GetContainerNameFromPath(service.LogFilePath)
@@ -37,10 +40,10 @@ func (service ConsumedLinesFileService) GetLastConsumedLinesFilePath() string {
 	if errors.Is(err, os.ErrNotExist) {
 		cpCommand := exec.Command("touch", filepath)
 		if err := cpCommand.Run(); err != nil {
-			log.Fatalf("Error creating empty last consumed file at '%s': %s", filepath, err)
+			logging.Errorf("Error creating empty last consumed file at '%s': %s", filepath, err)
 		}
 	} else if err != nil {
-		log.Fatalf("Error checking empty last consumed file at '%s': %s", filepath, err)
+		logging.Errorf("Error checking empty last consumed file at '%s': %s", filepath, err)
 	}
 
 	return filepath
@@ -84,7 +87,7 @@ func (service ConsumedLinesFileService) RequiresUpdate() bool {
 	if errors.Is(err, os.ErrNotExist) {
 		return true
 	} else if err != nil {
-		log.Fatalf("Error when comparing consumed file: %s", err)
+		logging.Errorf("Error when comparing consumed file: %s", err)
 	}
 
 	return isDifferent

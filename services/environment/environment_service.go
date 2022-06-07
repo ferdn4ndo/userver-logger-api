@@ -82,6 +82,7 @@ func PreloadVariables() *EnvVarList {
 	variables.addVariable("LETSENCRYPT_EMAIL", "The hostmaster e-mail to use in the SSL certificate generation by Let's Encrypt if you're running the container behind a reverse proxy.", false, "localhost")
 	variables.addVariable("BASIC_AUTH_USERNAME", "The username to use in the Basic Authentication of the API endpoints.", true, "")
 	variables.addVariable("BASIC_AUTH_PASSWORD", "The password to use in the Basic Authentication of the API endpoints.", true, "")
+	variables.addVariable("INTERNAL_LOG_LEVEL", "The minimum log level to be printed (for internal api workflows, not for the monitored containers).", false, "50")
 	variables.addVariable("LOG_FILES_FOLDER", "The location of the log files to be watched.", false, "/log_files")
 	variables.addVariable("TMP_FOLDER", "The location of the temporary files used while running the service.", false, "/go/src/github.com/ferdn4ndo/userver-logger-api/tmp")
 	variables.addVariable("DATA_FOLDER", "The location of the data files used while running the service.", false, "/go/src/github.com/ferdn4ndo/userver-logger-api/data")

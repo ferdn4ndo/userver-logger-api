@@ -4,7 +4,6 @@ import (
 	"errors"
 	"fmt"
 	"io/ioutil"
-	"log"
 	"os"
 	"time"
 
@@ -14,6 +13,7 @@ import (
 	"github.com/ferdn4ndo/userver-logger-api/models"
 	"github.com/ferdn4ndo/userver-logger-api/services/environment"
 	"github.com/ferdn4ndo/userver-logger-api/services/file"
+	"github.com/ferdn4ndo/userver-logger-api/services/logging"
 )
 
 // ErrNoMatch is returned when we request a row that doesn't exist
@@ -51,12 +51,12 @@ func (db DatabaseService) GetDbConn() *gorm.DB {
 func (db DatabaseService) GetDatabaseFileSize() int64 {
 	file, err := os.Open(getDatabaseFilePath())
 	if err != nil {
-		log.Fatalf("Error opening database file: %s", err)
+		logging.Errorf("Error opening database file: %s", err)
 	}
 
 	fileStats, err := file.Stat()
 	if err != nil {
-		log.Fatalf("Error checking database file: %s", err)
+		logging.Errorf("Error checking database file: %s", err)
 	}
 
 	return fileStats.Size()
@@ -93,11 +93,11 @@ func getEmptyFixtureFilePath() string {
 }
 
 func createEmptyDatabase() error {
-	log.Println("Creating empty database...")
+	logging.Info("Creating empty database...")
 
 	databasePath := getDatabaseFilePath()
 	if _, err := os.Stat(databasePath); err == nil {
-		log.Panicf("Database file '%s' already exists!", databasePath)
+		logging.Errorf("Database file '%s' already exists!", databasePath)
 	}
 
 	emptyFixturePath := getEmptyFixtureFilePath()
@@ -120,7 +120,7 @@ func InitializeDatabase() DatabaseServiceInterface {
 	if _, err := os.Stat(databasePath); errors.Is(err, os.ErrNotExist) {
 		err = createEmptyDatabase()
 		if err != nil {
-			log.Fatalf("Error creating empty database: %s", err)
+			logging.Errorf("Error creating empty database: %s", err)
 		}
 	}
 
@@ -128,21 +128,21 @@ func InitializeDatabase() DatabaseServiceInterface {
 
 	db, err := gorm.Open(conn, &gorm.Config{})
 	if err != nil {
-		log.Fatalf("Error opening DB connection: %s", err)
+		logging.Errorf("Error opening DB connection: %s", err)
 	}
 
 	service := DatabaseService{conn: db}
 
-	log.Println("Migrating the schema...")
+	logging.Debug("Migrating the schema...")
 	if err = service.conn.AutoMigrate(&models.LogEntry{}); err != nil {
-		log.Fatalf("Error applying DB migrations: %s", err)
+		logging.Errorf("Error applying DB migrations: %s", err)
 	}
 
 	if err := service.AddHeartbeatLog(); err != nil {
-		log.Fatalf("Error adding heartbeat: %s", err)
+		logging.Errorf("Error adding heartbeat: %s", err)
 	}
 
-	log.Println("Database connection established!")
+	logging.Debug("Database connection established!")
 
 	return service
 }
@@ -172,7 +172,7 @@ func (MockedDatabaseService) AddHeartbeatLog() error {
 }
 
 func (MockedDatabaseService) Close() {
-	fmt.Println("Mocking Close call")
+	logging.Debug("Mocking Close call")
 }
 
 func (MockedDatabaseService) GetDatabaseFileSize() int64 {

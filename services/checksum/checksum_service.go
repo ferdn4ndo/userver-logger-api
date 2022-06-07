@@ -5,12 +5,12 @@ import (
 	"errors"
 	"fmt"
 	"io"
-	"log"
 	"os"
 	"path/filepath"
 	"strings"
 
 	"github.com/ferdn4ndo/userver-logger-api/services/file"
+	"github.com/ferdn4ndo/userver-logger-api/services/logging"
 )
 
 func ComputeFileChecksum(filename string) (string, error) {
@@ -44,7 +44,7 @@ func GetCachedFileChecksum(filename string) string {
 
 	dat, err := os.ReadFile(cachedFilename)
 	if err != nil {
-		log.Fatalf("Error reading cached file %s", cachedFilename)
+		logging.Errorf("Error reading cached file %s", cachedFilename)
 	}
 
 	return string(dat)

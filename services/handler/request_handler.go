@@ -3,9 +3,9 @@ package handler
 import (
 	"encoding/json"
 	"fmt"
-	"log"
 	"net/http"
 
+	"github.com/ferdn4ndo/userver-logger-api/services/logging"
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/render"
 )
@@ -25,7 +25,7 @@ func UnauthorizedHandler(writer http.ResponseWriter) {
 
 	err := json.NewEncoder(writer).Encode(ErrUnauthorized)
 	if err != nil {
-		log.Fatalf("Error encoding json object: %s", err)
+		logging.Errorf("Error encoding json object: %s", err)
 		writer.WriteHeader(http.StatusInternalServerError)
 		fmt.Fprintf(writer, "An internal error occurred while encoding the json object!")
 		return

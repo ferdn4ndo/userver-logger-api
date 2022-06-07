@@ -8,6 +8,7 @@ import (
 	chiRender "github.com/go-chi/render"
 
 	"github.com/ferdn4ndo/userver-logger-api/services/handler"
+	"github.com/ferdn4ndo/userver-logger-api/services/logging"
 )
 
 type RenderInterface interface {
@@ -23,7 +24,11 @@ type RenderService struct{}
 func (service RenderService) Render(writer http.ResponseWriter, request *http.Request, data RenderInterface) {
 	error := chiRender.Render(writer, request, data)
 	if error != nil {
-		chiRender.Render(writer, request, handler.ServerErrorRenderer(error))
+		renderError := chiRender.Render(writer, request, handler.ServerErrorRenderer(error))
+
+		if renderError != nil {
+			logging.Error(fmt.Sprintf("Error when rendering: %s", renderError))
+		}
 
 		return
 	}

@@ -9,6 +9,7 @@ import (
 	"github.com/go-chi/docgen"
 
 	"github.com/ferdn4ndo/userver-logger-api/services/file"
+	"github.com/ferdn4ndo/userver-logger-api/services/logging"
 )
 
 var DOC_JSON_FILE_PATH = "/data/routes.json"
@@ -28,5 +29,5 @@ func ExportApiDocumentation(router chi.Router) {
 		log.Fatal(error)
 	}
 
-	log.Printf("Exported API documentation to %s\n", outputJsonFile)
+	logging.Debugf("Exported API documentation to %s", outputJsonFile)
 }
