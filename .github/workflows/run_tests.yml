@@ -24,7 +24,7 @@ jobs: # Docs: <https://git.io/JvxXE>
           fetch-depth: 0
 
       - name: Check for GitLeaks
-        uses: zricethezav/gitleaks-action@v1.6.0 # Action page: <https://github.com/zricethezav/gitleaks-action>
+        uses: zricethezav/gitleaks-action@v2.0.4 # Action page: <https://github.com/zricethezav/gitleaks-action>
 
   check-codebase-quality:
     name: Check codebase quality
