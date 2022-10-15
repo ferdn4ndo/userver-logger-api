@@ -1,11 +1,24 @@
-FROM golang@sha256:f94174c5262af3d8446833277aa27af400fd1a880277d43ec436df06ef3bb8ab
+FROM golang@sha256:f3e683657ddf73726b5717c2ff80cdcd9e9efb7d81f77e4948fada9a10dc7257
+
+# To update the base alpine image, please refer to
+# https://github.com/docker-library/repo-info/blob/master/repos/golang/remote/1-alpine.md
+# and get the latest sha256
 
 LABEL maintaner="Fernando Constantino <const.fernando@gmail.com>"
 
 # Install GCC + git + SSL ca certificates
 # GCC is required to build the sqlite3 dependency
 # Git is required for fetching the dependencies
-RUN apk update && apk add git gcc musl-dev curl sqlite coreutils && rm -rf /var/cache/apk/*
+RUN apk update \
+    && apk add \
+      git \
+      gcc \
+      musl-dev \
+      curl \
+      sqlite \
+      coreutils \
+    && apk upgrade \
+    && rm -rf /var/cache/apk/*
 
 # Create appuser
 ENV USER=appuser
@@ -25,7 +38,16 @@ WORKDIR /go/src/github.com/ferdn4ndo/userver-logger-api/
 
 COPY ./ /go/src/github.com/ferdn4ndo/userver-logger-api/
 
-RUN go mod download gorm.io/driver/sqlite github.com/go-chi/chi/v5 github.com/go-chi/docgen github.com/go-chi/render gorm.io/gorm
+RUN go mod download \
+    github.com/go-chi/chi/v5 \
+    github.com/go-chi/docgen \
+    github.com/go-chi/render \
+    gorm.io/gorm \
+    github.com/mattn/go-sqlite3 \
+    gorm.io/driver/sqlite \
+    github.com/ajg/form
+
+RUN go mod tidy
 
 RUN go mod verify
 
