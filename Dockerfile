@@ -1,4 +1,4 @@
-FROM golang@sha256:f3e683657ddf73726b5717c2ff80cdcd9e9efb7d81f77e4948fada9a10dc7257
+FROM golang@sha256:0a03b591c358a0bb02e39b93c30e955358dadd18dc507087a3b7f3912c17fe13
 
 # To update the base alpine image, please refer to
 # https://github.com/docker-library/repo-info/blob/master/repos/golang/remote/1-alpine.md
@@ -37,6 +37,8 @@ RUN adduser \
 WORKDIR /go/src/github.com/ferdn4ndo/userver-logger-api/
 
 COPY ./ /go/src/github.com/ferdn4ndo/userver-logger-api/
+
+RUN git config --global --add safe.directory /go/src/github.com/ferdn4ndo/userver-logger-api
 
 RUN go mod download \
     github.com/go-chi/chi/v5 \
