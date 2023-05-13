@@ -49,6 +49,7 @@ Then edit the file to tweak the settings as you wish before running the containe
 * **DATABASE_FILE**: The filename of the SQLite database file (inside the `data` folder) to store the parsed log entries. (Default: `sqlite.db`)
 * **TEST_DATABASE_FILE**: The filename of the SQLite database file (inside the `data` folder) to use during the tests. (Default: `test.sqlite.db`)
 * **EMPTY_DATABASE_FILE**: The filename of the SQLite database file (inside the `fixture` folder) without any table, to be used when preparing a new test environment.
+* **CORS_ALLOWED_HOSTS**: The list of hosts (comma-separated) serves as the response for the CORS header (Access-Control-Allow-Origin). If empty or not informed, the wildcard `*` will be assumed, meaning that the API will be accessible from any origin.
 
 ## How to run
 
@@ -159,7 +160,6 @@ If you only want the number (float) of the coverage percentage, run:
 ```
 docker exec -it userver-logger-api sh -c "./scripts/get_test_coverage_percentage.sh"
 ```
-
 
 ## F.A.Q.
 
