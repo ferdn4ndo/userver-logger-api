@@ -34,7 +34,7 @@ jobs: # Docs: <https://git.io/JvxXE>
           .
 
       - name: Configure grype
-        run: cat ./.grype.yaml && cp .grype.yaml ~/
+        run: cat ./.grype.yml && cp .grype.yml ~/
 
       - name: Scan image
         uses: anchore/scan-action@v3 # action page: <https://github.com/anchore/scan-action>
