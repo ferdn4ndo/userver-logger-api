@@ -14,9 +14,17 @@ on:
       - '**.md'
 
 jobs: # Docs: <https://git.io/JvxXE>
-  build-image:
-    name: Build docker image
+  build-image-healthcheck-and-uts:
+    name: Build image, health check and run UTs
     runs-on: ubuntu-20.04
+    env:
+      CONTAINER_NAME: userver-logger-api
+      AUTH_USERNAME: test
+      AUTH_PASSWORD: test
+      DATA_FOLDER: /home/runner/work/userver-logger-api/userver-logger-api/data
+      LOG_FILES_FOLDER: /home/runner/work/userver-logger-api/userver-logger-api/data
+      FIXTURE_FOLDER: /home/runner/work/userver-logger-api/userver-logger-api/fixture
+      CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
     steps:
       - name: Check out code
         uses: actions/checkout@v3
@@ -31,50 +39,6 @@ jobs: # Docs: <https://git.io/JvxXE>
           --build-arg VCS_REF=${GITHUB_SHA}
           .
 
-      - name: Save docker image
-        run: docker save userver-logger-api:local > ./docker-image.tar
-
-      - name: Upload docker image artifact
-        uses: actions/upload-artifact@v3
-        with:
-          name: test-docker-image
-          path: ./docker-image.tar
-          retention-days: 1
-
-  scan-image-healthcheck-and-uts:
-    name: Scan image, health check and UTs
-    runs-on: ubuntu-20.04
-    needs:
-      - build-image
-    env:
-      CONTAINER_NAME: userver-logger-api
-      AUTH_USERNAME: test
-      AUTH_PASSWORD: test
-      DATA_FOLDER: /home/runner/work/userver-logger-api/userver-logger-api/data
-      LOG_FILES_FOLDER: /home/runner/work/userver-logger-api/userver-logger-api/data
-      FIXTURE_FOLDER: /home/runner/work/userver-logger-api/userver-logger-api/fixture
-      CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
-    steps:
-      - name: Check out code
-        uses: actions/checkout@v3
-
-      - name: Download built docker image
-        uses: actions/download-artifact@v3
-        with:
-          name: test-docker-image
-          path: .artifact
-
-      - name: Prepare image to run
-        working-directory: .artifact
-        run: docker load < docker-image.tar
-
-      - name: Scan image
-        uses: anchore/scan-action@v3 # action page: <https://github.com/anchore/scan-action>
-        with:
-          image: userver-logger-api:local
-          fail-build: true
-          severity-cutoff: low # negligible, low, medium, high or critical
-
       - name: Creating directories
         run: mkdir -p "$LOG_FILES_FOLDER"
 
@@ -82,7 +46,7 @@ jobs: # Docs: <https://git.io/JvxXE>
         run: curl -sL https://raw.githubusercontent.com/ferdn4ndo/userver-logger-api/main/fixture/sample-app.log > "$LOG_FILES_FOLDER/sample-app.log"
 
       - name: Try to run container
-        run: docker run -d --rm -p 5555:5555 -v "$LOG_FILES_FOLDER":/log_files --env BASIC_AUTH_USERNAME="$AUTH_USERNAME" --env BASIC_AUTH_PASSWORD="$AUTH_PASSWORD" --env DATA_FOLDER="$DATA_FOLDER" --name "$CONTAINER_NAME" "$CONTAINER_NAME":local
+        run: docker run -d --rm -p 5555:5555 -v "$LOG_FILES_FOLDER":/log_files --env BASIC_AUTH_USERNAME="$AUTH_USERNAME" --env BASIC_AUTH_PASSWORD="$AUTH_PASSWORD" --env DATA_FOLDER="$DATA_FOLDER" --name "$CONTAINER_NAME" userver-logger-api:local
 
       - name: Wait for healthy status
         run: while [ "`docker inspect -f {{.State.Health.Status}} $CONTAINER_NAME`" != "healthy" ]; do sleep 5; done

@@ -15,7 +15,7 @@ on:
 
 jobs: # Docs: <https://git.io/JvxXE>
   check-codebase-quality:
-    name: Check codebase quality with ShellCheck
+    name: Check codebase quality with ReviewDog
     runs-on: ubuntu-20.04
     steps:
       - name: Check out code into the Go module directory

@@ -1,4 +1,4 @@
-name: Label Issues And Pull Requests
+name: Label Issues & PRs
 
 on:
   issues:
