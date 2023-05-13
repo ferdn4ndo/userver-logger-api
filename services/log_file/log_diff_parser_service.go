@@ -2,7 +2,6 @@ package log_file
 
 import (
 	"bufio"
-	"fmt"
 	"strings"
 
 	"github.com/ferdn4ndo/userver-logger-api/models"
@@ -13,14 +12,18 @@ import (
 type LogDiffParserService struct {
 	Producer          string
 	Diff              string
-	LogEntryDbService log_entry.LogEntryDatabaseService
+	LogEntryDbService log_entry.LogEntryDatabaseServiceInterface
 }
 
 func (service LogDiffParserService) ParseDiff() error {
 	scanner := bufio.NewScanner(strings.NewReader(service.Diff))
 	for scanner.Scan() {
-		line := strings.TrimSpace(scanner.Text())
-		service.parseLogFileLine(line)
+		line := scanner.Text()
+
+		_, _, err := service.parseLogFileLine(line)
+		if err != nil {
+			logging.Errorf("Error parsing line '%s': %s", line, err)
+		}
 	}
 
 	if err := scanner.Err(); err != nil {
@@ -30,10 +33,20 @@ func (service LogDiffParserService) ParseDiff() error {
 	return nil
 }
 
-func (service LogDiffParserService) parseLogFileLine(line string) {
+func (service LogDiffParserService) parseLogFileLine(line string) (string, bool, error) {
+	line = strings.TrimSpace(line)
+
+	if line == "" {
+		logging.Debugf("Skipping empty diff line!")
+
+		return line, false, nil
+	}
+
 	logEntryExists, err := service.LogEntryDbService.CheckIfLogEntryExists(service.Producer, line)
 	if err != nil {
-		logging.Error(fmt.Sprintf("Error checking if log entry exists: %s", err))
+		logging.Errorf("Error checking if log entry line '%s' exists: %s", line, err)
+
+		return line, false, err
 	}
 
 	if !logEntryExists {
@@ -43,9 +56,15 @@ func (service LogDiffParserService) parseLogFileLine(line string) {
 		}
 
 		if err := service.LogEntryDbService.AddLogEntry(model); err != nil {
-			logging.Errorf("Error adding parsed log line entry: %s", err)
+			logging.Errorf("Error adding parsed log entry for line '%s': %s", line, err)
+
+			return line, false, err
 		}
+
+		return line, true, nil
 	} else {
-		logging.Debug(fmt.Sprintf("Skipping duplicate line: %s", line))
+		logging.Debugf("Skipping duplicate line: %s", line)
+
+		return line, false, nil
 	}
 }
