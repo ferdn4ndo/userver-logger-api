@@ -19,7 +19,7 @@ type LogDiffParserService struct {
 func (service LogDiffParserService) ParseDiff() error {
 	scanner := bufio.NewScanner(strings.NewReader(service.Diff))
 	for scanner.Scan() {
-		line := scanner.Text()
+		line := strings.TrimSpace(scanner.Text())
 		service.parseLogFileLine(line)
 	}
 
