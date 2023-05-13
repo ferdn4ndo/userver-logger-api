@@ -8,7 +8,7 @@ on:
       - closed
       - reopened
   pull_request:
-    types: 
+    types:
       - opened
       - edited
       - closed
@@ -28,7 +28,7 @@ jobs:
       pull-requests: write
     steps:
       - name: Set up Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       - name: Run IvanFon/super-labeler-action
         uses: IvanFon/super-labeler-action@v1
