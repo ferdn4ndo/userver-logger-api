@@ -25,6 +25,8 @@ jobs: # Docs: <https://git.io/JvxXE>
 
       - name: Check for GitLeaks
         uses: zricethezav/gitleaks-action@v2.3.2 # Action page: <https://github.com/zricethezav/gitleaks-action>
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   check-codebase-quality:
     name: Check codebase quality
