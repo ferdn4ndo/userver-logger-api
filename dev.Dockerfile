@@ -21,6 +21,8 @@ RUN apt-get update && apt-get install -y git gcc musl-dev ca-certificates curl s
 
 COPY ./ /go/src/github.com/ferdn4ndo/userver-logger-api/
 
+RUN git config --global --add safe.directory /go/src/github.com/ferdn4ndo/userver-logger-api
+
 RUN go mod download github.com/go-chi/chi/v5 github.com/go-chi/docgen github.com/go-chi/render gorm.io/gorm gorm.io/driver/sqlite
 
 RUN go mod verify

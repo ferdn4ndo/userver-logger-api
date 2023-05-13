@@ -91,6 +91,7 @@ func PreloadVariables() *EnvVarList {
 	variables.addVariable("TEST_DATABASE_FILE", "The filename of the SQLite database file (inside the data folder) to use during the tests.", false, "test.sqlite.db")
 	variables.addVariable("EMPTY_DATABASE_FILE", "The filename of the SQLite database file (inside the fixture folder) without any table, to be used when preparing a new test environment.", false, "empty.sqlite.db")
 	variables.addVariable("FILE_SCAN_INTERVAL", "The interval (in seconds) to check for changes in the log files (for parsing).", false, "5")
+	variables.addVariable("CORS_ALLOWED_HOSTS", "The list of hosts (comma-separated) serves as the response for the CORS header (Access-Control-Allow-Origin).", false, "")
 
 	return &variables
 }

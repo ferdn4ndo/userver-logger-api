@@ -2,23 +2,26 @@ package router
 
 import (
 	"github.com/go-chi/chi/v5"
-	"github.com/go-chi/chi/v5/middleware"
+	chiMiddleware "github.com/go-chi/chi/v5/middleware"
 	chiRender "github.com/go-chi/render"
 
 	"github.com/ferdn4ndo/userver-logger-api/services/authentication"
 	"github.com/ferdn4ndo/userver-logger-api/services/database"
 	"github.com/ferdn4ndo/userver-logger-api/services/docs"
 	"github.com/ferdn4ndo/userver-logger-api/services/handler"
+	"github.com/ferdn4ndo/userver-logger-api/services/middleware"
 	"github.com/ferdn4ndo/userver-logger-api/services/render"
 )
 
 func CreateRouter(dbService database.DatabaseServiceInterface, generateDocs bool) chi.Router {
 	router := handler.NewHandler()
 
-	router.Use(middleware.RequestID)
-	router.Use(middleware.Logger)
-	router.Use(middleware.Recoverer)
-	router.Use(middleware.URLFormat)
+	router.Use(chiMiddleware.RequestID)
+	router.Use(chiMiddleware.Logger)
+	router.Use(chiMiddleware.Recoverer)
+	router.Use(chiMiddleware.URLFormat)
+
+	router.Use(middleware.AddCorsHeader)
 
 	router.Use(chiRender.SetContentType(chiRender.ContentTypeJSON))
 
