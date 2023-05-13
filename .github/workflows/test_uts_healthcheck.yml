@@ -1,4 +1,4 @@
-name: Run The Test Suite
+name: UTs & Health Check
 
 on:
   push:
@@ -14,41 +14,6 @@ on:
       - '**.md'
 
 jobs: # Docs: <https://git.io/JvxXE>
-  check-gitleaks:
-    name: Check for code leaks with GitLeaks
-    runs-on: ubuntu-20.04
-    steps:
-      - name: Check out code
-        uses: actions/checkout@v3
-        with:
-          fetch-depth: 0
-
-      - name: Check for GitLeaks
-        uses: zricethezav/gitleaks-action@v2.3.2 # Action page: <https://github.com/zricethezav/gitleaks-action>
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-  check-codebase-quality:
-    name: Check codebase quality
-    runs-on: ubuntu-20.04
-    steps:
-      - name: Check out code into the Go module directory
-        uses: actions/checkout@v3
-
-      - name: Setup golangci-lint
-        uses: reviewdog/action-golangci-lint@v2
-
-      - name: Setup reviewdog
-        uses: reviewdog/action-setup@v1
-
-      - name: Run linter (gofumpt -s) with reviewdog
-        env:
-          REVIEWDOG_GITHUB_API_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          go install mvdan.cc/gofumpt@v0.2.0
-          gofumpt -e -d . | \
-          reviewdog -name="gofumpt" -f=diff -f.diff.strip=0 -reporter=github-pr-review
-
   build-image:
     name: Build docker image
     runs-on: ubuntu-20.04
@@ -57,7 +22,14 @@ jobs: # Docs: <https://git.io/JvxXE>
         uses: actions/checkout@v3
 
       - name: Build docker image
-        run: docker build -f ./Dockerfile --tag userver-logger-api:local .
+        run: >
+          docker build
+          --file ./Dockerfile
+          --tag userver-logger-api:local
+          --build-arg BUILD_DATE=$(date -u +'%Y-%m-%dT%H:%M:%SZ')
+          --build-arg BUILD_VERSION=${{ github.event.release.tag_name }}
+          --build-arg VCS_REF=${GITHUB_SHA}
+          .
 
       - name: Save docker image
         run: docker save userver-logger-api:local > ./docker-image.tar
