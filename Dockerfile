@@ -1,10 +1,25 @@
 FROM golang@sha256:0a03b591c358a0bb02e39b93c30e955358dadd18dc507087a3b7f3912c17fe13
+LABEL maintaner="Fernando Constantino <const.fernando@gmail.com>"
 
 # To update the base alpine image, please refer to
 # https://github.com/docker-library/repo-info/blob/master/repos/golang/remote/1-alpine.md
-# and get the latest sha256
+# and get the latest sha256 for 'linux; amd64'
 
-LABEL maintaner="Fernando Constantino <const.fernando@gmail.com>"
+ARG BUILD_DATE
+ARG BUILD_VERSION
+ARG VCS_REF
+
+LABEL org.label-schema.schema-version="1.0"
+LABEL org.label-schema.build-date=$BUILD_DATE
+LABEL org.label-schema.name="ferdn4ndo/userver-logger-api"
+LABEL org.label-schema.description="An Alpine-based Go API to process and catalog `*.log` file, allowing queries with pagination and basic search capabilities."
+LABEL org.label-schema.vcs-url="https://github.com/ferdn4ndo/userver-logger-api"
+LABEL org.label-schema.usage="/README.md"
+LABEL org.label-schema.vcs-ref=$VCS_REF
+LABEL org.label-schema.version=$BUILD_VERSION
+LABEL org.label-schema.docker.cmd="docker run --rm --env-file ./.env ferdn4ndo/userver-logger-api"
+LABEL org.label-schema.docker.cmd.devel="docker compose -f docker-compose.dev.yml up --build"
+LABEL org.label-schema.docker.cmd.test="docker exec -it userver-logger-api sh -c ./scripts/run_all_tests.sh"
 
 # Install GCC + git + SSL ca certificates
 # GCC is required to build the sqlite3 dependency
