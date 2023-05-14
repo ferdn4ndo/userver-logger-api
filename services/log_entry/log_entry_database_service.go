@@ -10,8 +10,8 @@ import (
 	"github.com/ferdn4ndo/userver-logger-api/services/pagination"
 )
 
-type LogEntryServiceInterface interface {
-	GetAllLogEntries(limit int, offset int, params *LogEntrySearchParams) (*models.LogEntryList, int, error)
+type LogEntryDatabaseServiceInterface interface {
+	GetAllLogEntries(request *http.Request, params *LogEntrySearchParams) (*models.LogEntryList, int, error)
 	AddLogEntry(logEntry *models.LogEntry) error
 	GetLogEntryById(logEntryId uint) (*models.LogEntry, error)
 	UpdateLogEntry(logEntryId uint, logEntryData *models.LogEntryRequest) (*models.LogEntry, error)

@@ -3,8 +3,11 @@
 [![GoVersion](https://img.shields.io/github/go-mod/go-version/ferdn4ndo/userver-logger-api)](https://github.com/ferdn4ndo/userver-logger-api/blob/master/go.mod)
 [![Release](https://img.shields.io/github/v/release/ferdn4ndo/userver-logger-api)](https://github.com/ferdn4ndo/userver-logger-api/releases)
 [![Go Report Card](https://goreportcard.com/badge/github.com/ferdn4ndo/userver-logger-api)](https://goreportcard.com/report/github.com/ferdn4ndo/userver-logger-api)
-[![test status](https://github.com/ferdn4ndo/userver-logger-api/actions/workflows/run_tests.yml/badge.svg?branch=main)](https://github.com/ferdn4ndo/userver-logger-api/actions)
-[![codecov](https://codecov.io/gh/ferdn4ndo/userver-logger-api/branch/main/graph/badge.svg?token=8756QC1248)](https://codecov.io/gh/ferdn4ndo/userver-logger-api)
+[![UTs & E2E](https://github.com/ferdn4ndo/userver-logger-api/actions/workflows/test_uts_healthcheck.yml/badge.svg?branch=main)](https://github.com/ferdn4ndo/userver-logger-api/actions)
+[![Code Leakage Test](https://github.com/ferdn4ndo/userver-logger-api/actions/workflows/test_code_leaks.yml/badge.svg?branch=main)](https://github.com/ferdn4ndo/userver-logger-api/actions)
+[![Code Quality Test](https://github.com/ferdn4ndo/userver-logger-api/actions/workflows/test_code_quality.yml/badge.svg?branch=main)](https://github.com/ferdn4ndo/userver-logger-api/actions)
+[![Vulnerabilities Scan](https://github.com/ferdn4ndo/userver-logger-api/actions/workflows/test_grype_scan.yml/badge.svg?branch=main)](https://github.com/ferdn4ndo/userver-logger-api/actions)
+[![UT Code Coverage](https://codecov.io/gh/ferdn4ndo/userver-logger-api/branch/main/graph/badge.svg?token=8756QC1248)](https://codecov.io/gh/ferdn4ndo/userver-logger-api)
 [![MIT license](https://img.shields.io/badge/license-MIT-brightgreen.svg)](https://opensource.org/licenses/MIT)
 
 <p align="center">
@@ -13,7 +16,7 @@
 
 ---
 
-A RESTful API developed in [Go](https://go.dev/) using the MSC (Model, Service, Controller) architecture to process and catalog `*.log` files (generated as the standard output of running docker containers), allowing queries with pagination and basic search capabilities.
+A RESTful API developed in [Go](https://go.dev/) using the MSC (Model, Service, Controller) architecture to process and catalog `*.log` files (generated as the standard output of running docker containers), allowing queries with pagination and basic search capabilities, including a complete CI workflow with internal Unit Tests (UTs) and health check. Protected against code leakage by [GitLeaks](https://github.com/gitleaks/gitleaks-action/) and package vulnerabilities by [Anchore Grype](https://github.com/anchore/grype). Code quality check by [ReviewDog GoLangCI Lint](https://github.com/reviewdog/action-golangci-lint/tree/v2/).
 
 It's part of the [uServer-Logger-Slim](https://github.com/ferdn4ndo/userver-logger-slim) application, a lightweight option for a logging stack in a docker microservices environment. Compared to an ELK scenario, it would replace both Elasticsearch & Logstash services more lightly (although losing several capabilities too). The goal of this service is to be part of a Log Management tool light enough to run in a multi-container environment inside a low-to-medium EC2 instance.
 
