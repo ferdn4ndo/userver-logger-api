@@ -26,7 +26,7 @@ jobs:
         run: >
           docker build
           --file ./Dockerfile
-          --tag userver-logger-api:latest
+          --tag ferdn4ndo/userver-logger-api:latest
           --build-arg BUILD_DATE=$(date -u +'%Y-%m-%dT%H:%M:%SZ')
           --build-arg BUILD_VERSION=${{ github.event.release.tag_name }}
           --build-arg VCS_REF=${GITHUB_SHA}
