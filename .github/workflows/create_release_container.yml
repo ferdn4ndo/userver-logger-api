@@ -17,7 +17,10 @@ jobs:
         id: slug
 
       - name: Login to DockerHub Registry
-        run: echo ${{ secrets.DOCKER_PASSWORD }} | docker login -u ${{ vars.DOCKER_LOGIN }} --password-stdin
+        env:
+          DOCKER_LOGIN: ${{ vars.DOCKER_LOGIN }}
+          DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+        run: echo ${DOCKER_PASSWORD} | docker login -u ${DOCKER_LOGIN} --password-stdin
 
       - name: Build the Docker image
         run: >
