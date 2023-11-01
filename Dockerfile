@@ -1,4 +1,4 @@
-FROM golang@sha256:0a03b591c358a0bb02e39b93c30e955358dadd18dc507087a3b7f3912c17fe13
+FROM golang@sha256:825766243db91e041ce9f9589f321e9e50704cc36c7b9ccdeb0be3c5a81d647c
 LABEL maintaner="Fernando Constantino <const.fernando@gmail.com>"
 
 # To update the base alpine image, please refer to
