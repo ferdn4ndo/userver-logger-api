@@ -28,7 +28,7 @@ jobs:
       pull-requests: write
     steps:
       - name: Set up Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Run IvanFon/super-labeler-action
         uses: IvanFon/super-labeler-action@v1
