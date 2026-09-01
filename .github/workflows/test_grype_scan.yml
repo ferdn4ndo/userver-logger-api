@@ -37,7 +37,7 @@ jobs: # Docs: <https://git.io/JvxXE>
         run: cat ./.grype.yml && cp .grype.yml ~/
 
       - name: Scan image
-        uses: anchore/scan-action@v3 # action page: <https://github.com/anchore/scan-action>
+        uses: anchore/scan-action@v7 # action page: <https://github.com/anchore/scan-action>
         id: scan
         with:
           image: userver-logger-api:local
